@@ -1,0 +1,23 @@
+extends layout
+
+block variables
+  - var title = "Game Competition"
+
+block content
+  h2.text-center Game Result
+
+  .row
+    .offset-sm-2.col-sm-8
+      .jumbotron-fluid.text-center.
+        Welcome to the game competition page, #{user.profile.firstName}.
+
+  table(style='width:40%', align='center', border='1')
+    tr
+        th First name
+        th Email
+        th Result
+    each res in result_list
+        tr
+            th #{res.firstName}
+            th #{res.email.substr(0, 6)}... 
+            th #{res.result}
