@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+server/src/login-game/node_modules
+server/src/login-game/dist
+server/src/login-game/.cache/
+**/__pycache__
+.vscode/
