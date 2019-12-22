@@ -1,0 +1,23 @@
+.delay-1 {
+    animation-delay: 0.3s;
+}
+
+.delay-2 {
+    animation-delay: 2s;
+}
+
+.text-primary {
+    color: #ecf0f1 !important;
+}
+
+.vertical-center {
+    display: flex;
+    min-height: 100%;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hand-cur {
+    cursor: pointer !important;
+}
