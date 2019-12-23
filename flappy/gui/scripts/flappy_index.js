@@ -10,6 +10,8 @@ const tryStartingNewGame = () => {
 
     if (name_field.val() === null || name_field.val() === "") {
         emptyPlayerName();
+    } else {
+        $('#new_game_window').modal('hide');
     }
 };
 
@@ -26,11 +28,21 @@ const emptyPlayerName = () => {
     name_field.trigger('focus');
 }
 
+const startNewGame = (player_name) => {
+    console.log("Starting new game for: ", player_name);
+};
 
 $('#new_game_window').on('shown.bs.modal', () => {
     $('#player_name_field').trigger('focus');
     $('#player_name_field')[0].value = "";
     $('#player_email_field')[0].value = "";
+});
+
+$('#new_game_window').on('hidden.bs.modal', (evt) => {
+    const player_name = $('#player_name_field').val();
+    if (player_name) {
+        startNewGame(player_name);
+    }
 });
 
 $('#player_name_field').keypress(handleKeyPress);
