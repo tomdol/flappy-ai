@@ -32,6 +32,15 @@ const emptyPlayerName = () => {
 
 const startNewGame = (player_name) => {
     console.log("Starting new game for: ", player_name);
+    window.location.href = `flappy.ai.html?player_name=${player_name}`;
+};
+
+const showScoreBoard = (player_name) => {
+    window.location.href = "scoreboard.html";
+};
+
+const mainPage = () => {
+    window.location.href = "index.html";
 };
 
 $('#new_game_window').on('shown.bs.modal', () => {

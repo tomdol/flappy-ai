@@ -1,3 +1,7 @@
+body {
+    overflow: hidden;
+}
+
 .delay-1 {
     animation-delay: 0.4s;
 }
@@ -12,6 +16,14 @@
 
 .delay-4 {
     animation-delay: 1s;
+}
+
+.delay-5 {
+    animation-delay: 1.2s;
+}
+
+.delay-6 {
+    animation-delay: 1.8s;
 }
 
 .text-primary {
@@ -51,4 +63,8 @@
 .main-page-button {
     letter-spacing: .1rem;
     font-weight: 800;
+}
+
+.todo li::after {
+    display: none;
 }
