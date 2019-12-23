@@ -1,9 +1,17 @@
 .delay-1 {
-    animation-delay: 0.3s;
+    animation-delay: 0.4s;
 }
 
 .delay-2 {
-    animation-delay: 2s;
+    animation-delay: .6s;
+}
+
+.delay-3 {
+    animation-delay: .8s;
+}
+
+.delay-4 {
+    animation-delay: 1s;
 }
 
 .text-primary {
