@@ -18,13 +18,15 @@ const tryStartingNewGame = () => {
 const emptyPlayerName = () => {
     const name_field = $('#player_name_field');
 
+    const error_animation_class = "bounce";
+
     const removeAnimation = () => {
-        name_field.removeClass("shake");
+        name_field.removeClass(error_animation_class);
         name_field.off('animationend', removeAnimation);
     };
 
     name_field.bind('animationend', removeAnimation);
-    name_field.addClass("shake");
+    name_field.addClass(error_animation_class);
     name_field.trigger('focus');
 }
 

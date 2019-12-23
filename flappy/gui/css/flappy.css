@@ -10,6 +10,10 @@
     color: #ecf0f1 !important;
 }
 
+.text-dark {
+    color: #34495e !important;
+}
+
 .vertical-center {
     display: flex;
     min-height: 100%;
