@@ -21,3 +21,12 @@
 .hand-cur {
     cursor: pointer !important;
 }
+
+.tile {
+    border: 5px solid #34495e;
+}
+
+.flappy-header {
+    font-size: 10rem; font-weight: 1000; margin-bottom: 8rem; margin-top: 1rem;
+    text-shadow: -4px 0 #34495e, 0 4px #34495e, 4px 0 #34495e, 0 -4px #34495e;
+}
