@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" id="new_game_window">
+    <div class="modal fade" tabindex="-1" id="new_game_window">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -50,14 +50,15 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <input type="text" placeholder="Player name" class="form-control" required>
+                        <input type="text" placeholder="Player name" class="form-control animated fast" id="player_name_field"
+                            required>
                         <br>
-                        <input type="text" placeholder="Email (optional)" class="form-control">
+                        <input type="email" placeholder="Email (optional)" class="form-control" id="player_email_field">
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Start</button>
+                    <button type="button" class="btn btn-primary" onclick="tryStartingNewGame()">Start</button>
                 </div>
             </div>
         </div>
