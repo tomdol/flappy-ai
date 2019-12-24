@@ -13,65 +13,19 @@
     <link href="css/flappy.css" rel="stylesheet">
 </head>
 
-<body class="palette-turquoise" onload="startAnimatingBird()">
-    <div class="vertical-center">
-        <div class="d-flex flex-column align-items-center">
-            <div class="animated bounceInDown delay-1"><img src="img/bird_transparent.png" class="animated" id="bird_logo"></div>
-            <h1 class="text-primary animated bounceInDown flappy-header">flappy.ai</h1>
-        </div>
-
-        <div class="container">
-            <div class="row">
-                <div class="col animated bounceInLeft delay-2">
-                    <div class="tile hand-cur" data-toggle="modal" data-target="#new_game_window">
-                        <h1><span class="fui-play tile-image"></span></h1>
-                        <br>
-                        <div class="btn btn-lg btn-block btn-warning main-page-button text-dark">NEW GAME</div>
-                    </div>
-                </div>
-                <div class="col animated bounceInUp delay-3" onclick="showScoreBoard()">
-                    <div class="tile hand-cur">
-                        <h1><span class="fui-list-numbered tile-image"></span></h1>
-                        <br>
-                        <div class="btn btn-lg btn-block btn-info main-page-button">SCORE BOARD</div>
-                    </div>
-                </div>
-                <div class="col animated bounceInRight delay-4">
-                    <div class="tile hand-cur">
-                        <h1><span class="fui-trash tile-image"></span></h1>
-                        <br>
-                        <div class="btn btn-lg btn-block btn-danger main-page-button text-dark">RESET SCORES</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" tabindex="-1" id="new_game_window">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" style="margin-top: 0">Enter your name</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <input type="text" placeholder="Player name" class="form-control animated fast"
-                            id="player_name_field" required>
-                        <br>
-                        <input type="email" placeholder="Email (optional)" class="form-control" id="player_email_field">
-                    </div>
-                </div>
-                <div class="modal-footer d-flex justify-content-between">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="tryStartingNewGame()">Start</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<body class="palette-turquoise d-flex justify-content-center">
+    <canvas id="game" width="800" height="600"></canvas>
 </body>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+<script src="scripts/jquery-3.3.1.min.js"></script>
 <script src="scripts/flat-ui.js"></script>
 <script src="scripts/flappy_index.js"></script>
+<script src="scripts/jcanvas.min.js"></script>
+<script src="scripts/game.js"></script>
+
+<script>
+    const game = new Game("#game");
+    game.initCanvas();
+</script>
 
 </html>

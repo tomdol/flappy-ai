@@ -23,7 +23,8 @@
         <div class="container">
             <div class="row">
                 <div class="col animated bounceInLeft delay-2">
-                    <div class="tile hand-cur" data-toggle="modal" data-target="#new_game_window">
+                    <!-- <div class="tile hand-cur" data-toggle="modal" data-target="#new_game_window"> -->
+                    <div class="tile hand-cur" onclick="startNewGame('Tomek')">
                         <h1><span class="fui-play tile-image"></span></h1>
                         <br>
                         <div class="btn btn-lg btn-block btn-warning main-page-button text-dark">NEW GAME</div>
@@ -69,8 +70,8 @@
         </div>
     </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+<script src="scripts/jquery-3.3.1.min.js"></script>
 <script src="scripts/flat-ui.js"></script>
 <script src="scripts/flappy_index.js"></script>
 <script src="scripts/flappy_animations.js"></script>
