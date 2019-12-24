@@ -35,36 +35,8 @@ const startNewGame = (player_name) => {
     window.location.href = `flappy.ai.html?player_name=${player_name}`;
 };
 
-const showScoreBoard = (player_name) => {
+const showScoreBoard = () => {
     window.location.href = "scoreboard.html";
-};
-
-const mainPage = () => {
-    window.location.href = "index.html";
-};
-
-const startAnimatingBird = () => {
-    setTimeout(() => { animateBird(0); }, 5000);
-}
-
-const animateBird = (idx) => {
-    const animation_classes = ["rubberBand", "bounce", "shake", "tada", "wobble", "heartBeat", "flash"];
-
-    const animation_class = animation_classes[idx % animation_classes.length];
-
-    console.log(animation_class, idx);
-
-    const bird = $('#bird_logo');
-
-    const removeAnimation = () => {
-        bird.removeClass(animation_class);
-        bird.off('animationend', removeAnimation);
-    };
-
-    bird.bind('animationend', removeAnimation);
-    bird.addClass(animation_class);
-
-    setTimeout(() => { animateBird((idx + 1) % animation_classes.length); }, 5000);
 };
 
 $('#new_game_window').on('shown.bs.modal', () => {
