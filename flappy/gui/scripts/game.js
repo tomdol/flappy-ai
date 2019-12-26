@@ -13,7 +13,11 @@ class Game {
     }
 
     addPipes() {
-        const p = new PairOfPipes(canvas, 100);
+        const pipes = new PairOfPipes(this.c, 200);
+        this.renderer.addSprite(pipes.north_pipe);
+        this.renderer.addSprite(pipes.south_pipe);
+
+        this.renderer.render();
     }
 
     start() {

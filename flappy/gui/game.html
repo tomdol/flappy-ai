@@ -12,7 +12,7 @@
 </head>
 
 <body class="palette-turquoise d-flex justify-content-center">
-    <canvas id="game" width="800" height="600"></canvas>
+    <canvas id="game" width="1200" height="600"></canvas>
 </body>
 
 <script src="scripts/3rdparty/jquery-3.3.1.min.js"></script>
@@ -27,6 +27,7 @@
 <script>
     const game = new Game("#game");
     game.initCanvas();
+    game.addPipes();
 </script>
 
 </html>
