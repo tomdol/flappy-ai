@@ -26,10 +26,19 @@
 <script src="scripts/game.js"></script>
 
 <script>
-    const game = new Game("#game");
+    const canvas_id = "#game";
+    const game = new Game(canvas_id);
     game.initCanvas();
     game.addPipes();
+
+    $(canvas_id).trigger('focus');
     game.start();
+
+    document.onkeydown = (e) => {
+        if (e.which == 27) {
+            game.stop_game = true;
+        }
+    };
 </script>
 
 </html>

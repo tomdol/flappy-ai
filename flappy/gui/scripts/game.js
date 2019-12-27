@@ -4,6 +4,8 @@ class Game {
         game_time: 0.0
     };
 
+    stop_game = false;
+
     constructor(canvas_id) {
         this.c = $(canvas_id);
         this.renderer = new Renderer(this.c);
@@ -65,6 +67,7 @@ class Game {
 
     endRound() {
         const conditions = [
+            this.userStoppedTheGame,
             this.birdHitTheGround
         ];
 
@@ -73,8 +76,11 @@ class Game {
         });
     }
 
+    userStoppedTheGame() {
+        return this.stop_game;
+    }
+
     birdHitTheGround() {
-        console.log(this.bird.bottom())
         return this.bird.bottom() >= this.ground.ground_level;
     }
 }
