@@ -25,12 +25,19 @@ class Renderer {
             });
     }
 
-    addSprite(obj, scale = 1.0) {
+    addSprite(obj, name = "", scale = 1.0) {
         this.c.addLayer({
             type: "image",
             source: obj.img.src,
             scale: scale,
+            name: name,
             index: 1,
+            x: obj.x, y: obj.y
+        });
+    }
+
+    updateSprite(obj, name) {
+        this.c.setLayer(name, {
             x: obj.x, y: obj.y
         });
     }
