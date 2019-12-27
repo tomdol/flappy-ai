@@ -6,7 +6,7 @@ class Bird {
 
     LAYER_NAME = "player";
 
-    img = { src: "img/bird_transparent.png", h: 164, w: 110 };
+    img = { src: "img/bird_transparent.png", h: 110, w: 164 };
 
     velocity = 0.0;
 

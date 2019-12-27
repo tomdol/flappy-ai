@@ -32,7 +32,7 @@ class Renderer {
                 source: obj.img.src,
                 scale: obj.scale || 1.0,
                 groups: [obj.LAYER_GROUP],
-                index: 1,
+                index: 2,
                 x: obj.x, y: obj.y
             });
         } else {

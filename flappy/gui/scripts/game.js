@@ -32,8 +32,6 @@ class Game {
     }
 
     start() {
-        let i = 0;
-
         let t = 0;
         requestAnimationFrame((time) => {
             t = time;
@@ -44,8 +42,6 @@ class Game {
             t = time;
 
             this.hyperparams.game_time += delta_t / 1000;
-
-            // if (++i > 10) return;
 
             this.repositionGameObjects();
             this.updateRenderer();
