@@ -1,6 +1,7 @@
 class Game {
     hyperparams = {
-        GRAVITY: 10
+        GRAVITY: 15,
+        game_time: 0.0
     };
 
     constructor(canvas_id) {
@@ -13,10 +14,10 @@ class Game {
 
     initCanvas() {
         this.renderer.init();
-        this.renderer.addSprite(this.bird, "player", 0.333);
+        this.renderer.addSprite(this.bird, 0.333);
 
         for (let i = 0; i < this.ground.sprites.length; ++i) {
-            this.renderer.addSprite(this.ground.sprites[i], "ground" + i);
+            this.renderer.addSprite(this.ground.sprites[i]);
         }
 
         this.renderer.render();
@@ -24,36 +25,60 @@ class Game {
 
     addPipes() {
         const pipes = new PairOfPipes(this.c, 200, this.renderer.OBJECTS_POSITIONING);
-        this.renderer.addSprite(pipes.north_pipe, "north_pipe");
-        this.renderer.addSprite(pipes.south_pipe, "south_pipe");
+        this.renderer.addSprite(pipes.north_pipe);
+        this.renderer.addSprite(pipes.south_pipe);
 
         this.renderer.render();
     }
 
     start() {
+        let i = 0;
+
         let t = 0;
-        let game_time = 0;
         requestAnimationFrame((time) => {
             t = time;
         });
-
-        let i = 0;
 
         const game_loop = (time) => {
             const delta_t = time - t;
             t = time;
 
-            game_time += delta_t;
+            this.hyperparams.game_time += delta_t / 1000;
 
-            if (++i > 100) return;
+            // if (++i > 10) return;
 
-            this.bird.reposition(game_time / 1000);
-            console.log(game_time, this.bird.y);
-            this.renderer.updateSprite(this.bird, "player");
+            this.repositionGameObjects();
+            this.updateRenderer();
             this.renderer.render();
+
+            if (this.endRound()) return;
+
             requestAnimationFrame(game_loop);
         };
 
         requestAnimationFrame(game_loop);
+    }
+
+    repositionGameObjects() {
+        this.bird.reposition(this.hyperparams.game_time);
+    }
+
+    updateRenderer() {
+        this.renderer.updateSprite(this.bird, "player");
+    }
+
+    endRound() {
+        const conditions = [
+            this.birdHitTheGround
+        ];
+
+        return conditions.some(fn => {
+            return fn.apply(this);
+        });
+    }
+
+    birdHitTheGround() {
+        console.log(this.bird.bottom())
+        return this.bird.bottom() >= this.ground.ground_level;
     }
 }

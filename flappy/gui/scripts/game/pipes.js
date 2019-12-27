@@ -1,4 +1,6 @@
 class Pipe {
+    LAYER_GROUP = "pipes";
+
     x = 0;
     y = 0;
 

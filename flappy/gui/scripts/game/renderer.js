@@ -25,19 +25,30 @@ class Renderer {
             });
     }
 
-    addSprite(obj, name = "", scale = 1.0) {
-        this.c.addLayer({
-            type: "image",
-            source: obj.img.src,
-            scale: scale,
-            name: name,
-            index: 1,
-            x: obj.x, y: obj.y
-        });
+    addSprite(obj) {
+        if (obj.LAYER_GROUP) {
+            this.c.addLayer({
+                type: "image",
+                source: obj.img.src,
+                scale: obj.scale || 1.0,
+                groups: [obj.LAYER_GROUP],
+                index: 1,
+                x: obj.x, y: obj.y
+            });
+        } else {
+            this.c.addLayer({
+                type: "image",
+                source: obj.img.src,
+                scale: obj.scale || 1.0,
+                name: obj.LAYER_NAME,
+                index: 1,
+                x: obj.x, y: obj.y
+            });
+        }
     }
 
-    updateSprite(obj, name) {
-        this.c.setLayer(name, {
+    updateSprite(obj) {
+        this.c.setLayer(obj.LAYER_NAME, {
             x: obj.x, y: obj.y
         });
     }
