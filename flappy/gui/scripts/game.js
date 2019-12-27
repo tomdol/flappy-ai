@@ -4,11 +4,17 @@ class Game {
         this.renderer = new Renderer(this.c);
 
         this.bird = new Bird();
+        this.ground = new Ground(this.c);
     }
 
     initCanvas() {
         this.renderer.init();
         this.renderer.addSprite(this.bird, 0.333);
+
+        for (let s of this.ground.sprites) {
+            this.renderer.addSprite(s);
+        }
+
         this.renderer.render();
     }
 

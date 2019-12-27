@@ -23,23 +23,6 @@ class Renderer {
                 width: this.c.width(),
                 height: this.c.height()
             });
-
-        // ground
-        this.c
-            .addLayer({
-                type: "image",
-                source: "img/concrete.png",
-                index: 2,
-                x: this.c.width() / 2, y: this.c.height() - 30
-            })
-            .addLayer({
-                type: "rectangle",
-                fillStyle: "#2c3e50",
-                index: 2,
-                x: this.c.width() / 2, y: this.c.height() - 60,
-                width: this.c.width(),
-                height: 5
-            });
     }
 
     addSprite(obj, scale = 1.0) {
