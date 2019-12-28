@@ -54,7 +54,6 @@ class Renderer {
     }
 
     updateGroupLayer(layer_name, dx) {
-        console.log(layer_name, dx);
         this.c.setLayerGroup(layer_name, {
             x: `-=${dx}`
         });
