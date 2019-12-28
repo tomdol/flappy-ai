@@ -1,14 +1,18 @@
 class Game {
     // game hyperparams - constant during a round/level
     hyperparams = {
-        GRAVITY: 15,
-        velocity: 250,
+        GRAVITY: 500,
+        FLAP_ENERGY_REDUCTION_COEFF: 8000,
+        FLAP_ENERGY_QUANT: 2000,
+        velocity: 250, // horizontal velocity of the world
         pipes_gap: 200,
-        pipes_frequency: 2, // number of seconds between new pipes are added
+        pipes_frequency: 3, // number of seconds between new pipes are added
         game_time: 0.0
     };
 
     stop_game = false;
+    add_energy = false;
+    flap_energy = 0;
 
     constructor(canvas_id) {
         this.c = $(canvas_id);
@@ -38,6 +42,10 @@ class Game {
         this.renderer.addSprite(p.south_pipe);
     }
 
+    flap() {
+        this.add_energy = true;
+    }
+
     start() {
         let t = 0;
         requestAnimationFrame((time) => {
@@ -53,7 +61,9 @@ class Game {
 
             this.hyperparams.game_time += delta_t;
 
+            this.updateFlapEnergy(delta_t);
             this.repositionGameObjects(delta_t);
+            this.reduceFlapEnergy(delta_t);
             this.updateRenderer();
 
             if (this.hyperparams.game_time >= time_to_add_pipes) {
@@ -71,12 +81,33 @@ class Game {
         requestAnimationFrame(game_loop);
     }
 
+    updateFlapEnergy() {
+        if (this.add_energy) {
+            this.flap_energy += this.hyperparams.FLAP_ENERGY_QUANT;
+
+            if (this.bird.velocity > 0) {
+                this.bird.velocity = 0;
+            }
+            this.add_energy = false;
+        }
+    }
+
     repositionGameObjects(dt) {
-        this.bird.reposition(this.hyperparams.game_time);
+        this.bird.reposition(dt, this.flap_energy);
+
         this.pipes.reposition(dt);
+
         const added_block = this.ground.reposition(dt);
         if (added_block) {
             this.renderer.addSprite(added_block);
+        }
+    }
+
+    reduceFlapEnergy(dt) {
+        if (this.flap_energy > 0) {
+            const dE = this.hyperparams.FLAP_ENERGY_REDUCTION_COEFF * dt;
+            this.flap_energy -= dE;
+            this.flap_energy = Math.max(this.flap_energy, 0);
         }
     }
 

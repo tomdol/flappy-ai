@@ -3,9 +3,7 @@ class Bird {
     y = 100;
 
     scale = 0.333;
-
     LAYER_NAME = "player";
-
     img = { src: "img/bird_transparent.png", h: 110, w: 164 };
 
     velocity = 0.0;
@@ -14,12 +12,11 @@ class Bird {
         this.gravity = gravity;
     }
 
-    reposition(t) {
-        this.y += this.delta_s(t);
-    }
-
-    delta_s(t) {
-        return this.gravity * t * t / 2;
+    reposition(dt, flap_energy) {
+        const dv = (this.gravity - flap_energy) * dt;
+        this.velocity += dv;
+        const dy = this.velocity * dt;
+        this.y += dy;
     }
 
     // bottom edge of the bounding box

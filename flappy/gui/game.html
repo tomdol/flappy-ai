@@ -34,9 +34,11 @@
     $(canvas_id).trigger('focus');
     game.start();
 
-    document.onkeydown = (e) => {
+    document.onkeyup = (e) => {
         if (e.which == 27) {
             game.stop_game = true;
+        } else if (e.which == 32) {
+            game.flap();
         }
     };
 </script>
