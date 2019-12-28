@@ -65,9 +65,37 @@ class SouthPipe extends Pipe {
 }
 
 class PairOfPipes {
-    constructor(world, gap, positioning) {
-        this.north_pipe = new NorthPipe((world.height() - gap) / 2, world.width(), positioning);
-        this.south_pipe = new SouthPipe((world.height() - gap) / 2, world.width(), positioning, world.height());
+    constructor(world, ground_level, gap, positioning) {
+        let pipe_height = (world.height() - gap) / 2;
+
+        // calculate a random shift of the gap between pipes (up or down)
+        const shift = this.gapShift(world.height(), ground_level, pipe_height);
+
+        // create equal-length pipes
+        this.north_pipe = new NorthPipe(pipe_height - shift, world.width(), positioning);
+        this.south_pipe = new SouthPipe(pipe_height + shift, world.width(), positioning, world.height());
+    }
+
+    gapShift(world_height, ground_level, pipe_height) {
+        const ground_height = world_height - ground_level;
+
+        const min_pipe_img_height = 80;
+        let min_pipe_height = min_pipe_img_height;
+        let sign = 1;
+
+        const shift_down = Math.random() < 0.5;
+        if (shift_down) {
+            sign = -1;
+            min_pipe_height += ground_height;
+        }
+
+        const max_shift = pipe_height - min_pipe_height;
+        let shift = Math.floor(Math.random() * max_shift);
+
+        const min_shift = 20;
+        shift = Math.max(shift, min_shift);
+
+        return shift * sign;
     }
 
     moveLeft(dx) {
@@ -88,8 +116,8 @@ class Pipes {
         this.velocity = velocity;
     }
 
-    addPipes(world, gap, positioning = VerticalPositioning.CENTER_POINT) {
-        const p = new PairOfPipes(world, gap, positioning);
+    addPipes(world, ground_level, gap, positioning = VerticalPositioning.CENTER_POINT) {
+        const p = new PairOfPipes(world, ground_level, gap, positioning);
         this.pipes.push(p);
         return p;
     }

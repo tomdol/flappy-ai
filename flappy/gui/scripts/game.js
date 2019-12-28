@@ -31,7 +31,9 @@ class Game {
     }
 
     addPipes() {
-        const p = this.pipes.addPipes(this.c, this.hyperparams.pipes_gap, this.renderer.OBJECTS_POSITIONING, this.hyperparams.velocity);
+        const p = this.pipes.addPipes(this.c, this.ground.ground_level, this.hyperparams.pipes_gap,
+            this.renderer.OBJECTS_POSITIONING, this.hyperparams.velocity);
+
         this.renderer.addSprite(p.north_pipe);
         this.renderer.addSprite(p.south_pipe);
     }
