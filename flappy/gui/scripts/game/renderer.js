@@ -16,13 +16,13 @@ class Renderer {
 
         // sky
         this.c.addLayer({
-                type: "rectangle",
-                fillStyle: skyGradient,
-                index: 0,
-                x: this.c.width() / 2, y: this.c.height() / 2,
-                width: this.c.width(),
-                height: this.c.height()
-            });
+            type: "rectangle",
+            fillStyle: skyGradient,
+            index: 0,
+            x: this.c.width() / 2, y: this.c.height() / 2,
+            width: this.c.width(),
+            height: this.c.height()
+        });
     }
 
     addSprite(obj) {

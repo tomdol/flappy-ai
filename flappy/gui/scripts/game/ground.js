@@ -5,7 +5,7 @@ class Ground {
         const num_sprites = Math.ceil(world.width() / this.img.w);
         const starting_point = this.img.w / 2;
 
-        for (let i=0; i<num_sprites; ++i) {
+        for (let i = 0; i < num_sprites; ++i) {
             this.sprites.push({
                 LAYER_GROUP: "ground",
                 img: this.img,
