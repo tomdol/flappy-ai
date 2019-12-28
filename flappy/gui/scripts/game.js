@@ -15,7 +15,7 @@ class Game {
         this.renderer = new Renderer(this.c);
 
         this.bird = new Bird(this.hyperparams.GRAVITY);
-        this.ground = new Ground(this.c);
+        this.ground = new Ground(this.c, this.hyperparams.velocity);
         this.pipes = new Pipes(this.hyperparams.velocity);
     }
 
@@ -23,8 +23,8 @@ class Game {
         this.renderer.init();
         this.renderer.addSprite(this.bird);
 
-        for (let i = 0; i < this.ground.sprites.length; ++i) {
-            this.renderer.addSprite(this.ground.sprites[i]);
+        for (let i = 0; i < this.ground.blocks.length; ++i) {
+            this.renderer.addSprite(this.ground.blocks[i]);
         }
 
         this.renderer.render();
@@ -47,12 +47,13 @@ class Game {
         let time_to_add_pipes = this.hyperparams.pipes_frequency;
 
         const game_loop = (time) => {
-            const delta_t = time - t;
+            // time between the frames
+            const delta_t = (time - t) / 1000;
             t = time;
 
-            this.hyperparams.game_time += delta_t / 1000;
+            this.hyperparams.game_time += delta_t;
 
-            this.repositionGameObjects(delta_t / 1000);
+            this.repositionGameObjects(delta_t);
             this.updateRenderer();
 
             if (this.hyperparams.game_time >= time_to_add_pipes) {
@@ -73,11 +74,16 @@ class Game {
     repositionGameObjects(dt) {
         this.bird.reposition(this.hyperparams.game_time);
         this.pipes.reposition(dt);
+        const added_block = this.ground.reposition(dt);
+        if (added_block) {
+            this.renderer.addSprite(added_block);
+        }
     }
 
     updateRenderer() {
         this.renderer.updateSprite(this.bird);
         this.renderer.updateGroupLayer(this.pipes.LAYER_GROUP, this.pipes.dx);
+        this.renderer.updateGroupLayer(this.ground.LAYER_GROUP, this.ground.dx);
     }
 
     endRound() {
