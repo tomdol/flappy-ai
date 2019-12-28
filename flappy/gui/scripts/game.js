@@ -1,6 +1,8 @@
 class Game {
     hyperparams = {
         GRAVITY: 15,
+        velocity: 250,
+        pipes_gap: 200,
         game_time: 0.0
     };
 
@@ -12,11 +14,12 @@ class Game {
 
         this.bird = new Bird(this.hyperparams.GRAVITY);
         this.ground = new Ground(this.c);
+        this.pipes = new Pipes(this.hyperparams.velocity);
     }
 
     initCanvas() {
         this.renderer.init();
-        this.renderer.addSprite(this.bird, 0.333);
+        this.renderer.addSprite(this.bird);
 
         for (let i = 0; i < this.ground.sprites.length; ++i) {
             this.renderer.addSprite(this.ground.sprites[i]);
@@ -26,11 +29,9 @@ class Game {
     }
 
     addPipes() {
-        const pipes = new PairOfPipes(this.c, 200, this.renderer.OBJECTS_POSITIONING);
-        this.renderer.addSprite(pipes.north_pipe);
-        this.renderer.addSprite(pipes.south_pipe);
-
-        this.renderer.render();
+        const p = this.pipes.addPipes(this.c, this.hyperparams.pipes_gap, this.renderer.OBJECTS_POSITIONING, this.hyperparams.velocity);
+        this.renderer.addSprite(p.north_pipe);
+        this.renderer.addSprite(p.south_pipe);
     }
 
     start() {
@@ -45,7 +46,7 @@ class Game {
 
             this.hyperparams.game_time += delta_t / 1000;
 
-            this.repositionGameObjects();
+            this.repositionGameObjects(delta_t / 1000);
             this.updateRenderer();
             this.renderer.render();
 
@@ -57,12 +58,14 @@ class Game {
         requestAnimationFrame(game_loop);
     }
 
-    repositionGameObjects() {
+    repositionGameObjects(dt) {
         this.bird.reposition(this.hyperparams.game_time);
+        this.pipes.reposition(dt);
     }
 
     updateRenderer() {
-        this.renderer.updateSprite(this.bird, "player");
+        this.renderer.updateSprite(this.bird);
+        this.renderer.updateGroupLayer(this.pipes.LAYER_GROUP, this.pipes.dx);
     }
 
     endRound() {

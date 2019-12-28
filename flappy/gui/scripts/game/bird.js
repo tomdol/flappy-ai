@@ -14,12 +14,12 @@ class Bird {
         this.gravity = gravity;
     }
 
-    reposition(dt) {
-        this.y += this.delta_s(dt);
+    reposition(t) {
+        this.y += this.delta_s(t);
     }
 
-    delta_s(dt) {
-        return this.gravity * dt * dt / 2;
+    delta_s(t) {
+        return this.gravity * t * t / 2;
     }
 
     bottom() {

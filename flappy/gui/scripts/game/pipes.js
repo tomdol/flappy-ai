@@ -45,8 +45,29 @@ class SouthPipe extends Pipe {
 }
 
 class PairOfPipes {
-    constructor(world, gap, positioning = VerticalPositioning.CENTER_POINT) {
-        this.north_pipe = new NorthPipe((world.height() - gap) / 2, world.width() - 200, positioning);
-        this.south_pipe = new SouthPipe((world.height() - gap) / 2, world.width() - 200, positioning, world.height());
+    constructor(world, gap, positioning) {
+        this.north_pipe = new NorthPipe((world.height() - gap) / 2, world.width() - 100, positioning);
+        this.south_pipe = new SouthPipe((world.height() - gap) / 2, world.width() - 100, positioning, world.height());
+    }
+}
+
+class Pipes {
+    pipes = [];
+    dx = 0;
+
+    LAYER_GROUP = "pipes";
+
+    constructor(velocity) {
+        this.velocity = velocity;
+    }
+
+    addPipes(world, gap, positioning = VerticalPositioning.CENTER_POINT) {
+        const p = new PairOfPipes(world, gap, positioning);
+        this.pipes.push(p);
+        return p;
+    }
+
+    reposition(t) {
+        this.dx = this.velocity * t;
     }
 }
