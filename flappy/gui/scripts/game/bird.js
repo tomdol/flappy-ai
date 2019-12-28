@@ -22,6 +22,7 @@ class Bird {
         return this.gravity * t * t / 2;
     }
 
+    // bottom edge of the bounding box
     bottom() {
         return this.y + this.scale * this.img.h / 2;
     }

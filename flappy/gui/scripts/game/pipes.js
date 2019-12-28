@@ -14,6 +14,7 @@ class Pipe {
         this.x -= dx;
     }
 
+    // right edge of the bounding box
     right() {
         if (this.positioning === VerticalPositioning.CENTER_POINT) {
             return this.x + this.img.w / 2;
@@ -27,6 +28,9 @@ class NorthPipe extends Pipe {
     constructor(height, initial_x, positioning) {
         super(height, { src: "img/pipe_north_tr.png", h: 742, w: 85 }, positioning);
         this.x = initial_x;
+        if (positioning === VerticalPositioning.CENTER_POINT) {
+            this.x += this.img.w / 2;
+        }
         this.y = this.calc_y(height, positioning);
     }
 
@@ -44,6 +48,9 @@ class SouthPipe extends Pipe {
     constructor(height, initial_x, positioning, world_height) {
         super(height, { src: "img/pipe_south_tr.png", h: 742, w: 86 });
         this.x = initial_x;
+        if (positioning === VerticalPositioning.CENTER_POINT) {
+            this.x += this.img.w / 2;
+        }
         this.y = this.calc_y(height, positioning, world_height);
     }
 
@@ -59,8 +66,8 @@ class SouthPipe extends Pipe {
 
 class PairOfPipes {
     constructor(world, gap, positioning) {
-        this.north_pipe = new NorthPipe((world.height() - gap) / 2, world.width() - 100, positioning);
-        this.south_pipe = new SouthPipe((world.height() - gap) / 2, world.width() - 100, positioning, world.height());
+        this.north_pipe = new NorthPipe((world.height() - gap) / 2, world.width(), positioning);
+        this.south_pipe = new SouthPipe((world.height() - gap) / 2, world.width(), positioning, world.height());
     }
 
     moveLeft(dx) {

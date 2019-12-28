@@ -1,8 +1,10 @@
 class Game {
+    // game hyperparams - constant during a round/level
     hyperparams = {
         GRAVITY: 15,
         velocity: 250,
         pipes_gap: 200,
+        pipes_frequency: 2, // number of seconds between new pipes are added
         game_time: 0.0
     };
 
@@ -40,6 +42,8 @@ class Game {
             t = time;
         });
 
+        let time_to_add_pipes = this.hyperparams.pipes_frequency;
+
         const game_loop = (time) => {
             const delta_t = time - t;
             t = time;
@@ -48,6 +52,12 @@ class Game {
 
             this.repositionGameObjects(delta_t / 1000);
             this.updateRenderer();
+
+            if (this.hyperparams.game_time >= time_to_add_pipes) {
+                this.addPipes();
+                time_to_add_pipes += this.hyperparams.pipes_frequency;
+            }
+
             this.renderer.render();
 
             if (this.endRound()) return;
