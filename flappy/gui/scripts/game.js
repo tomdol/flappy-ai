@@ -1,4 +1,7 @@
-class Game {
+class Game extends EventTarget {
+    constants = Object.freeze({
+        level_time: 20000
+    });
     // game hyperparams - constant during a round/level
     hyperparams = {
         GRAVITY: 500,
@@ -7,14 +10,20 @@ class Game {
         velocity: 250, // horizontal velocity of the world
         pipes_gap: 200,
         pipes_frequency: 3, // number of seconds between new pipes are added
-        game_time: 0.0
+        game_time: 0.0,
+        lives: 3,
+        level: 1,
+        time_left: this.constants.level_time / 1000
     };
 
-    stop_game = false;
-    add_energy = false;
-    flap_energy = 0;
+    controls = {
+        stop_game: false,
+        add_energy: false,
+        flap_energy: 0,
+    };
 
     constructor(canvas_id) {
+        super();
         this.c = $(canvas_id);
         this.renderer = new Renderer(this.c);
 
@@ -43,16 +52,22 @@ class Game {
     }
 
     flap() {
-        this.add_energy = true;
+        this.controls.add_energy = true;
+    }
+
+    abort() {
+        this.controls.stop_game = true;
     }
 
     start() {
+        let time_to_add_pipes = this.hyperparams.pipes_frequency;
+
         let t = 0;
         requestAnimationFrame((time) => {
             t = time;
         });
 
-        let time_to_add_pipes = this.hyperparams.pipes_frequency;
+        this.startCountingDown();
 
         const game_loop = (time) => {
             // time between the frames
@@ -82,18 +97,18 @@ class Game {
     }
 
     updateFlapEnergy() {
-        if (this.add_energy) {
-            this.flap_energy += this.hyperparams.FLAP_ENERGY_QUANT;
+        if (this.controls.add_energy) {
+            this.controls.flap_energy += this.hyperparams.FLAP_ENERGY_QUANT;
 
             if (this.bird.velocity > 0) {
                 this.bird.velocity = 0;
             }
-            this.add_energy = false;
+            this.controls.add_energy = false;
         }
     }
 
     repositionGameObjects(dt) {
-        this.bird.reposition(dt, this.flap_energy);
+        this.bird.reposition(dt, this.controls.flap_energy);
 
         this.pipes.reposition(dt);
 
@@ -104,10 +119,10 @@ class Game {
     }
 
     reduceFlapEnergy(dt) {
-        if (this.flap_energy > 0) {
+        if (this.controls.flap_energy > 0) {
             const dE = this.hyperparams.FLAP_ENERGY_REDUCTION_COEFF * dt;
-            this.flap_energy -= dE;
-            this.flap_energy = Math.max(this.flap_energy, 0);
+            this.controls.flap_energy -= dE;
+            this.controls.flap_energy = Math.max(this.controls.flap_energy, 0);
         }
     }
 
@@ -128,8 +143,33 @@ class Game {
         });
     }
 
+    startCountingDown() {
+        this.dispatchEvent(new CustomEvent("tick", { detail: this.hyperparams.time_left }));
+
+        const cb = () => {
+            setTimeout(() => {
+                this.hyperparams.time_left--;
+
+                if (this.hyperparams.time_left >= 0) {
+                    this.dispatchEvent(new CustomEvent("tick", { detail: this.hyperparams.time_left }));
+                    cb();
+                } else {
+                    this.abort();
+                    this.levelUp();
+                }
+            }, 1000);
+        };
+
+        cb();
+    }
+
+    levelUp() {
+        this.hyperparams.level++;
+        this.dispatchEvent(new CustomEvent("level_up", { detail: this.hyperparams.level }));
+    }
+
     userStoppedTheGame() {
-        return this.stop_game;
+        return this.controls.stop_game;
     }
 
     birdHitTheGround() {

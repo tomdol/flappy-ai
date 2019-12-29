@@ -8,11 +8,22 @@
     <link href="https://fonts.googleapis.com/css?family=Titillium+Web:200,300&amp;subset=latin-ext" rel="stylesheet">
     <link href="css/flatui/bootstrap.min.css" rel="stylesheet">
     <link href="css/flatui/flat-ui.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
     <link href="css/flappy.css" rel="stylesheet">
 </head>
 
-<body class="palette-turquoise d-flex justify-content-center">
-    <canvas id="game" width="1200" height="600"></canvas>
+<body class="palette-turquoise">
+    <div class="container">
+        <canvas id="game" width="1200" height="600"></canvas>
+        <div class="d-flex justify-content-between">
+            <h1>Level</h1>
+            <h1 id="level_indicator" class="animated">1</h1>
+        </div>
+        <div class="d-flex justify-content-between">
+            <h1>Time</h1>
+            <h1 id="time_left">---</h1>
+        </div>
+    </div>
 </body>
 
 <script src="scripts/3rdparty/jquery-3.3.1.min.js"></script>
@@ -24,19 +35,32 @@
 <script src="scripts/game/pipes.js"></script>
 <script src="scripts/game/renderer.js"></script>
 <script src="scripts/game.js"></script>
+<script src="scripts/flappy_animations.js"></script>
 
 <script>
+    const time_left_elem = $("#time_left");
+    const level_elem = $("#level_indicator");
+
     const canvas_id = "#game";
     const game = new Game(canvas_id);
+
+    game.addEventListener('tick', (evt) => {
+        time_left_elem.text(evt.detail + " s");
+    });
+
+    game.addEventListener('level_up', (evt) => {
+        level_elem.text(evt.detail);
+        animateOnce("#level_indicator", "bounceIn");
+    });
+
     game.initCanvas();
     game.addPipes();
 
-    $(canvas_id).trigger('focus');
     game.start();
 
     document.onkeyup = (e) => {
         if (e.which == 27) {
-            game.stop_game = true;
+            game.abort();
         } else if (e.which == 32) {
             game.flap();
         }

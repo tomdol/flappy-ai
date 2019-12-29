@@ -25,3 +25,15 @@ const startAnimatingBird = (bird_id) => {
     // start with an initial delay of 5s
     setTimeout(() => { animateObject(bird_id); }, 5000);
 }
+
+const animateOnce = (animation_target_id, animation) => {
+    const obj_to_animate = $(animation_target_id);
+
+    const removeAnimation = () => {
+        obj_to_animate.removeClass(animation);
+        obj_to_animate.off('animationend', removeAnimation);
+    };
+
+    obj_to_animate.bind('animationend', removeAnimation);
+    obj_to_animate.addClass(animation);
+}
