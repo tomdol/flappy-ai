@@ -20,6 +20,7 @@ class Game extends EventTarget {
         stop_game: false,
         add_energy: false,
         flap_energy: 0,
+        countdown_timer: null
     };
 
     constructor(canvas_id) {
@@ -88,7 +89,10 @@ class Game extends EventTarget {
 
             this.renderer.render();
 
-            if (this.endRound()) return;
+            if (this.endRound()) {
+                clearTimeout(this.controls.countdown_timer);
+                return;
+            }
 
             requestAnimationFrame(game_loop);
         };
@@ -147,7 +151,7 @@ class Game extends EventTarget {
         this.dispatchEvent(new CustomEvent("tick", { detail: this.hyperparams.time_left }));
 
         const cb = () => {
-            setTimeout(() => {
+            this.controls.countdown_timer = setTimeout(() => {
                 this.hyperparams.time_left--;
 
                 if (this.hyperparams.time_left >= 0) {
