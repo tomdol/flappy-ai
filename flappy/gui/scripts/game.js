@@ -197,7 +197,6 @@ class Game extends EventTarget {
     resetLevelValues() {
         this.controls = {
             add_energy: false,
-            ready_to_start: true,
             flap_energy: 0,
             countdown_timer: null,
             animation_loop: null
@@ -214,6 +213,8 @@ class Game extends EventTarget {
         this.pipes = new Pipes(this.hyperparams.velocity);
 
         this.initCanvas();
+
+        this.controls.ready_to_start = true;
     }
 
     emitLevelValues() {
