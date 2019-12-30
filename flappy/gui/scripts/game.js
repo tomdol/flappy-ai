@@ -1,17 +1,18 @@
 class Game extends EventTarget {
     constants = Object.freeze({
         level_time: 5000,
-        gravity_increase: 25,
+        gravity_increase: 30,
         velocity_increase: 25,
-        pipe_gap_shrink: 10
+        pipe_gap_shrink: 25,
+        min_gap_size: 175
     });
     // game hyperparams - constant during a round/level
     hyperparams = {
         GRAVITY: 500,
         FLAP_ENERGY_REDUCTION_COEFF: 8000,
-        FLAP_ENERGY_QUANT: 2000,
+        FLAP_ENERGY: 2700,
         velocity: 250, // horizontal velocity of the world
-        pipes_gap: 200,
+        pipes_gap: 300,
         pipes_frequency: 3, // number of seconds between new pipes are added
         game_time: 0.0,
         lives: 3,
@@ -97,7 +98,7 @@ class Game extends EventTarget {
 
     updateFlapEnergy() {
         if (this.controls.add_energy) {
-            this.controls.flap_energy += this.hyperparams.FLAP_ENERGY_QUANT;
+            this.controls.flap_energy += this.hyperparams.FLAP_ENERGY;
 
             if (this.bird.velocity > 0) {
                 this.bird.velocity = 0;
@@ -208,7 +209,11 @@ class Game extends EventTarget {
     increaseDifficulty() {
         this.hyperparams.GRAVITY += this.constants.gravity_increase;
         this.hyperparams.velocity += this.constants.velocity_increase;
-        this.hyperparams.pipes_gap -= this.constants.pipe_gap_shrink;
+
+        // don't shrink the gap any more when it reaches the minimum size
+        if (this.hyperparams.pipes_gap != this.constants.min_gap_size) {
+            this.hyperparams.pipes_gap -= this.constants.pipe_gap_shrink;
+        }
     }
 
     birdHitTheGround() {
