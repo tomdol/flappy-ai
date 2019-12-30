@@ -3,8 +3,9 @@ class Game extends EventTarget {
         level_time: 5000,
         gravity_increase: 30,
         velocity_increase: 25,
+        pipes_frequency_increase: 0.3,
         pipe_gap_shrink: 25,
-        min_gap_size: 175
+        min_gap_size: 175,
     });
     // game hyperparams - constant during a round/level
     hyperparams = {
@@ -147,7 +148,17 @@ class Game extends EventTarget {
         clearTimeout(this.controls.countdown_timer);
         this.resetLevelValues();
         this.hyperparams.lives--;
-        this.prepareForTheNextLevel();
+
+        if (this.hyperparams.lives == 0) {
+            this.dispatchEvent(new Event("bird_died"));
+            this.renderer.wasted();
+            setTimeout(() => {
+                this.dispatchEvent(new Event("end_of_game"));
+            }, 2000);
+        } else {
+            this.prepareForTheNextLevel();
+            this.dispatchEvent(new Event("bird_died"));
+        }
     }
 
     stopAndLevelUp() {
@@ -203,6 +214,7 @@ class Game extends EventTarget {
 
     emitLevelValues() {
         this.dispatchEvent(new CustomEvent("level_up", { detail: this.hyperparams.level }));
+        this.dispatchEvent(new CustomEvent("lives_left", { detail: this.hyperparams.lives }));
         this.dispatchEvent(new CustomEvent("tick", { detail: this.hyperparams.time_left }));
     }
 
@@ -213,6 +225,10 @@ class Game extends EventTarget {
         // don't shrink the gap any more when it reaches the minimum size
         if (this.hyperparams.pipes_gap != this.constants.min_gap_size) {
             this.hyperparams.pipes_gap -= this.constants.pipe_gap_shrink;
+        }
+
+        if (this.hyperparams.level % 2 == 0 && this.hyperparams.pipes_frequency > 1.5) {
+            this.hyperparams.pipes_frequency -= this.constants.pipes_frequency_increase;
         }
     }
 

@@ -60,6 +60,22 @@ class Renderer {
         });
     }
 
+    wasted() {
+        this.c.drawText({
+            layer: true,
+            name: "wasted",
+            fillStyle: "#e74c3c",
+            strokeStyle: "#000",
+            strokeWidth: 7,
+            fontFamily: "GTA",
+            fontSize: "100pt",
+            fontStyle: "bold",
+            x: this.c.width() / 2,
+            y: this.c.height() / 2,
+            text: "wAsted"
+        });
+    }
+
     render() {
         this.c.drawLayers();
     }
