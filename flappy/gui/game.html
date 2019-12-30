@@ -10,6 +10,16 @@
     <link href="css/flatui/flat-ui.css" rel="stylesheet">
     <link href="css/animate.css" rel="stylesheet">
     <link href="css/flappy.css" rel="stylesheet">
+    <style>
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: #ecf0f1;
+        }
+    </style>
 </head>
 
 <body class="palette-turquoise">
@@ -17,16 +27,16 @@
         <canvas id="game" width="1200" height="600"></canvas>
         <div class="d-flex justify-content-around">
             <div class="d-flex">
+                <h1 class="p-2">Level:</h1>
+                <h1 class="p-2" id="level_indicator" class="animated"></h1>
+            </div>
+            <div class="d-flex">
                 <h1 class="p-2">Time:</h1>
                 <h1 id="time_left" class="p-2"></h1>
             </div>
             <div class="d-flex">
-                <h1 class="p-2">Lives:</h1>
+                <div id="heart" class="fui-heart" style="font-size: 4rem; padding-top: 1rem; color: #e74c3c;"></div>
                 <h1 class="p-2" id="lives_left"></h1>
-            </div>
-            <div class="d-flex">
-                <h1 class="p-2">Level:</h1>
-                <h1 class="p-2" id="level_indicator" class="animated"></h1>
             </div>
         </div>
     </div>
@@ -65,7 +75,7 @@
 
     game.addEventListener('level_up', (evt) => { level_elem.text(evt.detail); });
     game.addEventListener('lives_left', (evt) => { lives_elem.text(evt.detail); });
-    game.addEventListener('bird_died', () => { game.emitLevelValues(); });
+    game.addEventListener('bird_died', () => { animateOnce("#heart", "heartBeat"); game.emitLevelValues(); });
     game.addEventListener('end_of_game', () => { showScoreBoard(); });
 
     game.emitLevelValues();
