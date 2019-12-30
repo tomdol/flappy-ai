@@ -4,6 +4,7 @@ class Renderer {
 
     constructor(canvas) {
         this.c = canvas;
+        this.c.removeLayers();
     }
 
     init() {

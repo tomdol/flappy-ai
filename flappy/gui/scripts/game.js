@@ -1,6 +1,9 @@
 class Game extends EventTarget {
     constants = Object.freeze({
-        level_time: 20000
+        level_time: 5000,
+        gravity_increase: 25,
+        velocity_increase: 25,
+        pipe_gap_shrink: 10
     });
     // game hyperparams - constant during a round/level
     hyperparams = {
@@ -16,21 +19,13 @@ class Game extends EventTarget {
         time_left: this.constants.level_time / 1000
     };
 
-    controls = {
-        stop_game: false,
-        add_energy: false,
-        flap_energy: 0,
-        countdown_timer: null
-    };
+    controls = {};
 
     constructor(canvas_id) {
         super();
         this.c = $(canvas_id);
-        this.renderer = new Renderer(this.c);
-
-        this.bird = new Bird(this.hyperparams.GRAVITY);
-        this.ground = new Ground(this.c, this.hyperparams.velocity);
-        this.pipes = new Pipes(this.hyperparams.velocity);
+        this.resetLevelValues();
+        this.prepareForTheNextLevel();
     }
 
     initCanvas() {
@@ -56,12 +51,11 @@ class Game extends EventTarget {
         this.controls.add_energy = true;
     }
 
-    abort() {
-        this.controls.stop_game = true;
-    }
-
     start() {
-        let time_to_add_pipes = this.hyperparams.pipes_frequency;
+        this.controls.ready_to_start = false;
+
+        // the first pair of pipes should be added 1 second after a level starts
+        let time_to_add_pipes = 1;
 
         let t = 0;
         requestAnimationFrame((time) => {
@@ -89,15 +83,16 @@ class Game extends EventTarget {
 
             this.renderer.render();
 
-            if (this.endRound()) {
-                clearTimeout(this.controls.countdown_timer);
-                return;
+            if (this.playerLost()) {
+                this.stopTheGame();
+            } else if (this.controls.player_won) {
+                this.stopAndLevelUp();
+            } else {
+                requestAnimationFrame(game_loop);
             }
-
-            requestAnimationFrame(game_loop);
         };
 
-        requestAnimationFrame(game_loop);
+        this.controls.animation_loop = requestAnimationFrame(game_loop);
     }
 
     updateFlapEnergy() {
@@ -136,9 +131,8 @@ class Game extends EventTarget {
         this.renderer.updateGroupLayer(this.ground.LAYER_GROUP, this.ground.dx);
     }
 
-    endRound() {
+    playerLost() {
         const conditions = [
-            this.userStoppedTheGame,
             this.birdHitTheGround
         ];
 
@@ -147,19 +141,36 @@ class Game extends EventTarget {
         });
     }
 
-    startCountingDown() {
-        this.dispatchEvent(new CustomEvent("tick", { detail: this.hyperparams.time_left }));
+    stopTheGame() {
+        cancelAnimationFrame(this.controls.animation_loop);
+        clearTimeout(this.controls.countdown_timer);
+        this.resetLevelValues();
+        this.hyperparams.lives--;
+        this.prepareForTheNextLevel();
+    }
 
+    stopAndLevelUp() {
+        cancelAnimationFrame(this.controls.animation_loop);
+        clearTimeout(this.controls.countdown_timer);
+        this.resetLevelValues();
+        this.hyperparams.level++;
+        this.increaseDifficulty();
+
+        this.prepareForTheNextLevel();
+    }
+
+    startCountingDown() {
         const cb = () => {
+            this.dispatchEvent(new CustomEvent("tick", { detail: this.hyperparams.time_left }));
+
             this.controls.countdown_timer = setTimeout(() => {
                 this.hyperparams.time_left--;
 
-                if (this.hyperparams.time_left >= 0) {
-                    this.dispatchEvent(new CustomEvent("tick", { detail: this.hyperparams.time_left }));
+                if (this.hyperparams.time_left > 0) {
                     cb();
                 } else {
-                    this.abort();
-                    this.levelUp();
+                    this.dispatchEvent(new CustomEvent("tick", { detail: 0 }));
+                    this.controls.player_won = true;
                 }
             }, 1000);
         };
@@ -167,16 +178,44 @@ class Game extends EventTarget {
         cb();
     }
 
-    levelUp() {
-        this.hyperparams.level++;
-        this.dispatchEvent(new CustomEvent("level_up", { detail: this.hyperparams.level }));
+    resetLevelValues() {
+        this.controls = {
+            add_energy: false,
+            ready_to_start: true,
+            flap_energy: 0,
+            countdown_timer: null,
+            animation_loop: null
+        };
+
+        this.hyperparams.game_time = 0.0,
+        this.hyperparams.time_left = this.constants.level_time / 1000;
     }
 
-    userStoppedTheGame() {
-        return this.controls.stop_game;
+    prepareForTheNextLevel() {
+        this.renderer = new Renderer(this.c);
+        this.bird = new Bird(this.hyperparams.GRAVITY);
+        this.ground = new Ground(this.c, this.hyperparams.velocity);
+        this.pipes = new Pipes(this.hyperparams.velocity);
+
+        this.initCanvas();
+    }
+
+    emitLevelValues() {
+        this.dispatchEvent(new CustomEvent("level_up", { detail: this.hyperparams.level }));
+        this.dispatchEvent(new CustomEvent("tick", { detail: this.hyperparams.time_left }));
+    }
+
+    increaseDifficulty() {
+        this.hyperparams.GRAVITY += this.constants.gravity_increase;
+        this.hyperparams.velocity += this.constants.velocity_increase;
+        this.hyperparams.pipes_gap -= this.constants.pipe_gap_shrink;
     }
 
     birdHitTheGround() {
         return this.bird.bottom() >= this.ground.ground_level;
+    }
+
+    readyToStart() {
+        return this.controls.ready_to_start;
     }
 }

@@ -15,13 +15,19 @@
 <body class="palette-turquoise">
     <div class="container">
         <canvas id="game" width="1200" height="600"></canvas>
-        <div class="d-flex justify-content-between">
-            <h1>Level</h1>
-            <h1 id="level_indicator" class="animated">1</h1>
-        </div>
-        <div class="d-flex justify-content-between">
-            <h1>Time</h1>
-            <h1 id="time_left">---</h1>
+        <div class="d-flex justify-content-around">
+            <div class="d-flex">
+                <h1 class="p-2">Time:</h1>
+                <h1 id="time_left" class="p-2"></h1>
+            </div>
+            <div class="d-flex">
+                <h1 class="p-2">Lives:</h1>
+                <h1 class="p-2" id="lives_left">3</h1>
+            </div>
+            <div class="d-flex">
+                <h1 class="p-2">Level:</h1>
+                <h1 class="p-2" id="level_indicator" class="animated"></h1>
+            </div>
         </div>
     </div>
 </body>
@@ -40,29 +46,35 @@
 <script>
     const time_left_elem = $("#time_left");
     const level_elem = $("#level_indicator");
-
     const canvas_id = "#game";
+
     const game = new Game(canvas_id);
 
     game.addEventListener('tick', (evt) => {
-        time_left_elem.text(evt.detail + " s");
+        time_left_elem.text(evt.detail);
+        if (evt.detail == 0) {
+            animateOnce("#level_indicator", "bounceOut");
+
+            animateOnce("#time_left", "bounceOut", () => {
+                game.emitLevelValues();
+            });
+        }
     });
 
     game.addEventListener('level_up', (evt) => {
         level_elem.text(evt.detail);
-        animateOnce("#level_indicator", "bounceIn");
+
     });
 
-    game.initCanvas();
-    game.addPipes();
-
-    game.start();
+    game.emitLevelValues();
 
     document.onkeyup = (e) => {
-        if (e.which == 27) {
-            game.abort();
-        } else if (e.which == 32) {
-            game.flap();
+        if (e.which == 32) {
+            if (game.readyToStart()) {
+                game.start();
+            } else {
+                game.flap();
+            }
         }
     };
 </script>
