@@ -151,8 +151,9 @@ class Game extends EventTarget {
         this.hyperparams.lives--;
 
         if (this.hyperparams.lives == 0) {
-            this.dispatchEvent(new Event("bird_died"));
             this.renderer.wasted();
+            this.controls.ready_to_start = false;
+            this.dispatchEvent(new Event("bird_died"));
             setTimeout(() => {
                 this.dispatchEvent(new Event("end_of_game"));
             }, 2000);

@@ -50,7 +50,8 @@ class Renderer {
 
     updateSprite(obj) {
         this.c.setLayer(obj.LAYER_NAME, {
-            x: obj.x, y: obj.y
+            x: obj.x, y: obj.y,
+            rotate: obj.nose ? obj.nose : 0
         });
     }
 
@@ -73,7 +74,7 @@ class Renderer {
             x: this.c.width() / 2,
             y: this.c.height() / 2,
             text: "wAsted"
-        });
+        }).drawLayers();
     }
 
     render() {
