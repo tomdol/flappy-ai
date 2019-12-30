@@ -17,6 +17,15 @@ class Bird {
         this.velocity += dv;
         const dy = this.velocity * dt;
         this.y += dy;
+
+        if (this.top() <= 0) {
+            this.y = this.scale * this.img.h / 2;
+            this.velocity = 100;
+        }
+    }
+
+    top() {
+        return this.y - this.scale * this.img.h / 2;
     }
 
     // bottom edge of the bounding box
