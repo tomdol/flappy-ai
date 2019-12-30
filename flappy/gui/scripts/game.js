@@ -1,11 +1,12 @@
 class Game extends EventTarget {
     constants = Object.freeze({
-        level_time: 5000,
+        level_time: 10000,
         gravity_increase: 30,
         velocity_increase: 25,
         pipes_frequency_increase: 0.3,
         pipe_gap_shrink: 25,
         min_gap_size: 175,
+        FERC_shrink: 1000
     });
     // game hyperparams - constant during a round/level
     hyperparams = {
@@ -229,6 +230,10 @@ class Game extends EventTarget {
 
         if (this.hyperparams.level % 2 == 0 && this.hyperparams.pipes_frequency > 1.5) {
             this.hyperparams.pipes_frequency -= this.constants.pipes_frequency_increase;
+        }
+
+        if (this.hyperparams.level % 10 == 0 && this.hyperparams.FLAP_ENERGY_REDUCTION_COEFF > 6000) {
+            this.hyperparams.FLAP_ENERGY_REDUCTION_COEFF -= this.constants.FERC_shrink;
         }
     }
 
