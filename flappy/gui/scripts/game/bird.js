@@ -24,7 +24,7 @@ class Bird {
             this.y += dy;
         }
 
-        if (this.velocity > 500) {
+        if (this.velocity > 600) {
             this.nose = NoseDirection.DIVING;
         } else if (this.velocity > 400) {
             this.nose = NoseDirection.ALMOST_DIVING;

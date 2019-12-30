@@ -147,11 +147,11 @@ class Game extends EventTarget {
     stopTheGame() {
         cancelAnimationFrame(this.controls.animation_loop);
         clearTimeout(this.controls.countdown_timer);
+        this.renderer.wasted();
         this.resetLevelValues();
         this.hyperparams.lives--;
 
         if (this.hyperparams.lives == 0) {
-            this.renderer.wasted();
             this.controls.ready_to_start = false;
             this.dispatchEvent(new Event("bird_died"));
             setTimeout(() => {
@@ -161,7 +161,7 @@ class Game extends EventTarget {
             setTimeout(() => {
                 this.prepareForTheNextLevel();
                 this.dispatchEvent(new Event("bird_died"));
-            }, 1000);
+            }, 2000);
         }
     }
 
