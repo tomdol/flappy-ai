@@ -136,7 +136,8 @@ class Game extends EventTarget {
 
     playerLost() {
         const conditions = [
-            this.birdHitTheGround
+            this.birdHitTheGround,
+            this.birdHitAPipe
         ];
 
         return conditions.some(fn => {
@@ -203,7 +204,7 @@ class Game extends EventTarget {
         };
 
         this.hyperparams.game_time = 0.0,
-        this.hyperparams.time_left = this.constants.level_time / 1000;
+            this.hyperparams.time_left = this.constants.level_time / 1000;
     }
 
     prepareForTheNextLevel() {
@@ -243,6 +244,27 @@ class Game extends EventTarget {
 
     birdHitTheGround() {
         return this.bird.bottom() >= this.ground.ground_level;
+    }
+
+    birdHitAPipe() {
+        if (this.pipes.pipes.length == 0) {
+            return false;
+        }
+
+        if (this.collision(this.bird, this.pipes.pipes[0].north_pipe)) {
+            return true;
+        } else if (this.collision(this.bird, this.pipes.pipes[0].south_pipe)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    collision(bird, pipe) {
+        return (bird.left() < pipe.right() &&
+            bird.right() > pipe.left() &&
+            bird.top() < pipe.bottom() &&
+            bird.bottom() > pipe.top());
     }
 
     readyToStart() {

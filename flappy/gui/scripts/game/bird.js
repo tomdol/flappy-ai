@@ -45,8 +45,15 @@ class Bird {
         return this.y - this.scale * this.img.h / 2;
     }
 
-    // bottom edge of the bounding box
     bottom() {
         return this.y + this.scale * this.img.h / 2;
+    }
+
+    left() {
+        return this.x - this.scale * this.img.w / 2 - this.scale * 20; //extra offset for the wings
+    }
+
+    right() {
+        return this.x + this.scale * this.img.w / 2 - this.scale * 18; //extra offset for the nose
     }
 }

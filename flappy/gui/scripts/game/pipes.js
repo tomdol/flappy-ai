@@ -14,7 +14,30 @@ class Pipe {
         this.x -= dx;
     }
 
-    // right edge of the bounding box
+    top() {
+        if (this.positioning === VerticalPositioning.CENTER_POINT) {
+            return this.y - this.img.h / 2;
+        } else {
+            return this.y;
+        }
+    }
+
+    bottom() {
+        if (this.positioning === VerticalPositioning.CENTER_POINT) {
+            return this.y + this.img.h / 2;
+        } else {
+            return this.y + this.img.h;
+        }
+    }
+
+    left() {
+        if (this.positioning === VerticalPositioning.CENTER_POINT) {
+            return this.x - this.img.w / 2;
+        } else {
+            return this.x;
+        }
+    }
+
     right() {
         if (this.positioning === VerticalPositioning.CENTER_POINT) {
             return this.x + this.img.w / 2;
