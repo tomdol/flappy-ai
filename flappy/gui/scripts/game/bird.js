@@ -26,12 +26,18 @@ class Bird {
 
         if (this.velocity > 500) {
             this.nose = NoseDirection.DIVING;
+        } else if (this.velocity > 400) {
+            this.nose = NoseDirection.ALMOST_DIVING;
+        } else if (this.velocity > 300) {
+            this.nose = NoseDirection.FALLING_FASTER;
         } else if (this.velocity > 250) {
             this.nose = NoseDirection.FALLING;
-        } else if (this.velocity < 0) {
+        } else if (this.velocity < -300.0) {
             this.nose = NoseDirection.CLIMBING;
+        } else if (this.velocity < -150.0) {
+            this.nose = NoseDirection.CLIMBING_LIGHT;
         } else {
-            this.nose = NoseDirection.FLIGHT;
+            this.nose = NoseDirection.STRAIGHT_FLIGHT;
         }
     }
 

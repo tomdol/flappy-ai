@@ -4,8 +4,11 @@ const VerticalPositioning = Object.freeze({
 });
 
 const NoseDirection = Object.freeze({
-    FLIGHT: 0,
     CLIMBING: -30,
+    CLIMBING_LIGHT: -15,
+    STRAIGHT_FLIGHT: 0,
     FALLING: 30,
+    FALLING_FASTER: 45,
+    ALMOST_DIVING: 55,
     DIVING: 70
 });

@@ -158,8 +158,10 @@ class Game extends EventTarget {
                 this.dispatchEvent(new Event("end_of_game"));
             }, 2000);
         } else {
-            this.prepareForTheNextLevel();
-            this.dispatchEvent(new Event("bird_died"));
+            setTimeout(() => {
+                this.prepareForTheNextLevel();
+                this.dispatchEvent(new Event("bird_died"));
+            }, 1000);
         }
     }
 
