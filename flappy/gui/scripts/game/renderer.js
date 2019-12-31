@@ -61,6 +61,23 @@ class Renderer {
         });
     }
 
+    renderScore(score) {
+        this.c.removeLayer("score");
+        this.c.drawText({
+            layer: true,
+            name: "score",
+            fillStyle: "#e74c3c",
+            strokeStyle: "#000",
+            strokeWidth: 2,
+            fontFamily: "GTA",
+            fontSize: "50pt",
+            fontStyle: "bold",
+            x: this.c.width() - 100,
+            y: 75,
+            text: score
+        });
+    }
+
     wasted() {
         this.c.drawText({
             layer: true,

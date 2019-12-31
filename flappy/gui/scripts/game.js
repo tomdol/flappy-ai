@@ -5,6 +5,7 @@ class Game extends EventTarget {
         velocity_increase: 25,
         pipes_frequency_increase: 0.3,
         pipe_gap_shrink: 25,
+        pipes_points_increase: 5,
         min_gap_size: 175,
         FERC_shrink: 1000
     });
@@ -16,9 +17,11 @@ class Game extends EventTarget {
         velocity: 250, // horizontal velocity of the world
         pipes_gap: 300,
         pipes_frequency: 3, // number of seconds between new pipes are added
+        pipes_points: 10,
         game_time: 0.0,
         lives: 3,
         level: 1,
+        score: 0,
         time_left: this.constants.level_time / 1000
     };
 
@@ -29,29 +32,6 @@ class Game extends EventTarget {
         this.c = $(canvas_id);
         this.resetLevelValues();
         this.prepareForTheNextLevel();
-    }
-
-    initCanvas() {
-        this.renderer.init();
-        this.renderer.addSprite(this.bird);
-
-        for (let i = 0; i < this.ground.blocks.length; ++i) {
-            this.renderer.addSprite(this.ground.blocks[i]);
-        }
-
-        this.renderer.render();
-    }
-
-    addPipes() {
-        const p = this.pipes.addPipes(this.c, this.ground.ground_level, this.hyperparams.pipes_gap,
-            this.renderer.OBJECTS_POSITIONING, this.hyperparams.velocity);
-
-        this.renderer.addSprite(p.north_pipe);
-        this.renderer.addSprite(p.south_pipe);
-    }
-
-    flap() {
-        this.controls.add_energy = true;
     }
 
     start() {
@@ -77,6 +57,7 @@ class Game extends EventTarget {
             this.updateFlapEnergy(delta_t);
             this.repositionGameObjects(delta_t);
             this.reduceFlapEnergy(delta_t);
+            this.updateScore();
             this.updateRenderer();
 
             if (this.hyperparams.game_time >= time_to_add_pipes) {
@@ -88,7 +69,7 @@ class Game extends EventTarget {
 
             if (this.playerLost()) {
                 this.stopTheGame();
-            } else if (this.controls.player_won) {
+            } else if (this.controls.end_of_round) {
                 this.stopAndLevelUp();
             } else {
                 requestAnimationFrame(game_loop);
@@ -96,6 +77,31 @@ class Game extends EventTarget {
         };
 
         this.controls.animation_loop = requestAnimationFrame(game_loop);
+    }
+
+    initCanvas() {
+        this.renderer.init();
+        this.renderer.addSprite(this.bird);
+
+        for (let i = 0; i < this.ground.blocks.length; ++i) {
+            this.renderer.addSprite(this.ground.blocks[i]);
+        }
+
+        this.renderer.renderScore(this.hyperparams.score);
+
+        this.renderer.render();
+    }
+
+    addPipes() {
+        const p = this.pipes.addPipes(this.c, this.ground.ground_level, this.hyperparams.pipes_gap,
+            this.hyperparams.pipes_points, this.renderer.OBJECTS_POSITIONING);
+
+        this.renderer.addSprite(p.north_pipe);
+        this.renderer.addSprite(p.south_pipe);
+    }
+
+    flap() {
+        this.controls.add_energy = true;
     }
 
     updateFlapEnergy() {
@@ -106,6 +112,14 @@ class Game extends EventTarget {
                 this.bird.velocity = 0;
             }
             this.controls.add_energy = false;
+        }
+    }
+
+    reduceFlapEnergy(dt) {
+        if (this.controls.flap_energy > 0) {
+            const dE = this.hyperparams.FLAP_ENERGY_REDUCTION_COEFF * dt;
+            this.controls.flap_energy -= dE;
+            this.controls.flap_energy = Math.max(this.controls.flap_energy, 0);
         }
     }
 
@@ -120,29 +134,11 @@ class Game extends EventTarget {
         }
     }
 
-    reduceFlapEnergy(dt) {
-        if (this.controls.flap_energy > 0) {
-            const dE = this.hyperparams.FLAP_ENERGY_REDUCTION_COEFF * dt;
-            this.controls.flap_energy -= dE;
-            this.controls.flap_energy = Math.max(this.controls.flap_energy, 0);
-        }
-    }
-
     updateRenderer() {
         this.renderer.updateSprite(this.bird);
         this.renderer.updateGroupLayer(this.pipes.LAYER_GROUP, this.pipes.dx);
         this.renderer.updateGroupLayer(this.ground.LAYER_GROUP, this.ground.dx);
-    }
-
-    playerLost() {
-        const conditions = [
-            this.birdHitTheGround,
-            this.birdHitAPipe
-        ];
-
-        return conditions.some(fn => {
-            return fn.apply(this);
-        });
+        this.renderer.renderScore(this.hyperparams.score);
     }
 
     stopTheGame() {
@@ -187,7 +183,7 @@ class Game extends EventTarget {
                     cb();
                 } else {
                     this.dispatchEvent(new CustomEvent("tick", { detail: 0 }));
-                    this.controls.player_won = true;
+                    this.controls.end_of_round = true;
                 }
             }, 1000);
         };
@@ -227,6 +223,7 @@ class Game extends EventTarget {
     increaseDifficulty() {
         this.hyperparams.GRAVITY += this.constants.gravity_increase;
         this.hyperparams.velocity += this.constants.velocity_increase;
+        this.hyperparams.pipes_points += this.constants.pipes_points_increase;
 
         // don't shrink the gap any more when it reaches the minimum size
         if (this.hyperparams.pipes_gap != this.constants.min_gap_size) {
@@ -240,6 +237,17 @@ class Game extends EventTarget {
         if (this.hyperparams.level % 10 == 0 && this.hyperparams.FLAP_ENERGY_REDUCTION_COEFF > 6000) {
             this.hyperparams.FLAP_ENERGY_REDUCTION_COEFF -= this.constants.FERC_shrink;
         }
+    }
+
+    playerLost() {
+        const conditions = [
+            this.birdHitTheGround,
+            this.birdHitAPipe
+        ];
+
+        return conditions.some(fn => {
+            return fn.apply(this);
+        });
     }
 
     birdHitTheGround() {
@@ -262,12 +270,21 @@ class Game extends EventTarget {
 
     collision(bird, pipe) {
         return (bird.left() < pipe.right() &&
-            bird.right() > pipe.left() &&
-            bird.top() < pipe.bottom() &&
-            bird.bottom() > pipe.top());
+                bird.right() > pipe.left() &&
+                bird.top() < pipe.bottom() &&
+                bird.bottom() > pipe.top());
     }
 
     readyToStart() {
         return this.controls.ready_to_start;
+    }
+
+    updateScore() {
+        if (this.pipes.pipes.length > 0) {
+            const pipes = this.pipes.pipes[0];
+            if (pipes.points > 0 && pipes.right() < this.bird.left()) {
+                this.hyperparams.score += pipes.collectPoints();
+            }
+        }
     }
 }

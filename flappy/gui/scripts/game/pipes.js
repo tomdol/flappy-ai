@@ -88,7 +88,7 @@ class SouthPipe extends Pipe {
 }
 
 class PairOfPipes {
-    constructor(world, ground_level, gap, positioning) {
+    constructor(world, ground_level, gap, points, positioning) {
         let pipe_height = (world.height() - gap) / 2;
 
         // calculate a random shift of the gap between pipes (up or down)
@@ -97,6 +97,18 @@ class PairOfPipes {
         // create equal-length pipes
         this.north_pipe = new NorthPipe(pipe_height - shift, world.width(), positioning);
         this.south_pipe = new SouthPipe(pipe_height + shift, world.width(), positioning, world.height());
+
+        this.points = points;
+    }
+
+    right() {
+        return this.north_pipe.right();
+    }
+
+    collectPoints() {
+        const pts = this.points;
+        this.points = 0;
+        return pts;
     }
 
     gapShift(world_height, ground_level, pipe_height) {
@@ -139,8 +151,8 @@ class Pipes {
         this.velocity = velocity;
     }
 
-    addPipes(world, ground_level, gap, positioning = VerticalPositioning.CENTER_POINT) {
-        const p = new PairOfPipes(world, ground_level, gap, positioning);
+    addPipes(world, ground_level, gap, points, positioning = VerticalPositioning.CENTER_POINT) {
+        const p = new PairOfPipes(world, ground_level, gap, points, positioning);
         this.pipes.push(p);
         return p;
     }
