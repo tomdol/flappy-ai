@@ -54,6 +54,6 @@ class Bird {
     }
 
     right() {
-        return this.x + this.scale * this.img.w / 2 - this.scale * 18; //extra offset for the nose
+        return this.x + this.scale * this.img.w / 2 - this.scale * 20; //extra offset for the nose
     }
 }

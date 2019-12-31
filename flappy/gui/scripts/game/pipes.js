@@ -69,7 +69,7 @@ class NorthPipe extends Pipe {
 
 class SouthPipe extends Pipe {
     constructor(height, initial_x, positioning, world_height) {
-        super(height, { src: "img/pipe_south_tr.png", h: 742, w: 86 });
+        super(height, { src: "img/pipe_south_tr.png", h: 742, w: 86 }, positioning);
         this.x = initial_x;
         if (positioning === VerticalPositioning.CENTER_POINT) {
             this.x += this.img.w / 2;
