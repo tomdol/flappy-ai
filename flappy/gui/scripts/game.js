@@ -26,6 +26,7 @@ class Game extends EventTarget {
     };
 
     controls = {};
+    ws = null;
 
     constructor(canvas_id) {
         super();
@@ -286,5 +287,18 @@ class Game extends EventTarget {
                 this.hyperparams.score += pipes.collectPoints();
             }
         }
+    }
+
+    setWsController(controller) {
+        this.ws = controller;
+        this.ws.addEventListener('flap', (evt) => {
+            if (evt.params) {
+                // TODO: modify game.flap() and handle energy value
+                // game.flap(evt.params.energy);
+            } else {
+                console.log('flap');
+                this.flap();
+            }
+        });
     }
 }

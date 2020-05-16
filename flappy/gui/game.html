@@ -50,6 +50,7 @@
 <script src="scripts/game/ground.js"></script>
 <script src="scripts/game/pipes.js"></script>
 <script src="scripts/game/renderer.js"></script>
+<script src="scripts/game/controller.js"></script>
 <script src="scripts/game.js"></script>
 <script src="scripts/flappy_animations.js"></script>
 <script src="scripts/flappy_index.js"></script>
@@ -59,8 +60,13 @@
     const level_elem = $("#level_indicator");
     const lives_elem = $("#lives_left");
     const canvas_id = "#game";
+    const USE_WS_CONTROLLER = false;
 
     const game = new Game(canvas_id);
+
+    if (USE_WS_CONTROLLER) {
+        create_controller(game);
+    }
 
     game.addEventListener('tick', (evt) => {
         time_left_elem.text(evt.detail);
@@ -101,6 +107,27 @@
             }
         }
     };
+
+    function create_controller(game) {
+        const controller = new Controller("ws://127.0.0.1:9000");
+
+        controller.addEventListener('connected', () => {
+            game.setWsController(controller);
+        });
+
+        controller.addEventListener('websocket_error', (evt) => {
+            console.error('Websocket error');
+            console.error(evt);
+        });
+
+        controller.addEventListener('disconnected', () => {
+            console.log('Websocket disconnected');
+
+            controller.connect(); // TODO
+        });
+
+        controller.connect();
+    }
 </script>
 
 </html>

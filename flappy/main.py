@@ -1,11 +1,12 @@
 import asyncio
 import websockets
+import json
 
 
 async def bird_controller(websocket, path):
     while True:
-        await asyncio.sleep(0.5)
-        await websocket.send(now)
+        await asyncio.sleep(2)
+        await websocket.send(json.dumps({"command": "flap"}))
 
 
 if __name__ == "__main__":
