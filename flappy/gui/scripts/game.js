@@ -270,9 +270,9 @@ class Game extends EventTarget {
 
     collision(bird, pipe) {
         return (bird.left() < pipe.right() &&
-                bird.right() > pipe.left() &&
-                bird.top() < pipe.bottom() &&
-                bird.bottom() > pipe.top());
+            bird.right() > pipe.left() &&
+            bird.top() < pipe.bottom() &&
+            bird.bottom() > pipe.top());
     }
 
     readyToStart() {

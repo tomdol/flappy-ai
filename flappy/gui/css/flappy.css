@@ -52,7 +52,10 @@
 }
 
 .flappy-header {
-    font-size: 10rem; font-weight: 1000; margin-bottom: 8rem; margin-top: 1rem;
+    font-size: 10rem;
+    font-weight: 1000;
+    margin-bottom: 8rem;
+    margin-top: 1rem;
     text-shadow: -5px 0 #293a4b, 0 5px #293a4b, 5px 0 #293a4b, 0 -5px #293a4b;
 }
 

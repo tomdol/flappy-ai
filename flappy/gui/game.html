@@ -73,9 +73,16 @@
         }
     });
 
-    game.addEventListener('level_up', (evt) => { level_elem.text(evt.detail); });
-    game.addEventListener('lives_left', (evt) => { lives_elem.text(evt.detail); });
-    game.addEventListener('bird_died', () => { animateOnce("#heart", "heartBeat"); game.emitLevelValues(); });
+    game.addEventListener('level_up', (evt) => {
+        level_elem.text(evt.detail);
+    });
+    game.addEventListener('lives_left', (evt) => {
+        lives_elem.text(evt.detail);
+    });
+    game.addEventListener('bird_died', () => {
+        animateOnce("#heart", "heartBeat");
+        game.emitLevelValues();
+    });
     game.addEventListener('end_of_game', () => {
         animateOnce("#indicators", "fadeOutDown", () => {
             $("#indicators").remove();
@@ -85,7 +92,7 @@
 
     game.emitLevelValues();
 
-    document.onkeyup = (e) => {
+    document.onkeydown = (e) => {
         if (e.which == 32) {
             if (game.readyToStart()) {
                 game.start();
