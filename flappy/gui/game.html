@@ -10,6 +10,7 @@
     <link href="css/flatui/flat-ui.css" rel="stylesheet">
     <link href="css/animate.css" rel="stylesheet">
     <link href="css/flappy.css" rel="stylesheet">
+    <link href="css/game.css" rel="stylesheet">
     <style>
         h1,
         h2,
@@ -23,21 +24,19 @@
 </head>
 
 <body class="palette-turquoise">
-    <div class="container">
-        <canvas id="game" width="1200" height="600"></canvas>
-        <div class="d-flex justify-content-around animated" id="indicators">
-            <div class="d-flex">
-                <h1 class="p-2">Level:</h1>
-                <h1 class="p-2" id="level_indicator" class="animated"></h1>
-            </div>
-            <div class="d-flex">
-                <h1 class="p-2">Time:</h1>
-                <h1 id="time_left" class="p-2"></h1>
-            </div>
-            <div class="d-flex">
-                <div id="heart" class="fui-heart" style="font-size: 4rem; padding-top: 1rem; color: #e74c3c;"></div>
-                <h1 class="p-2" id="lives_left"></h1>
-            </div>
+    <canvas id="game" width="1400" height="600"></canvas>
+    <div class="d-flex justify-content-around animated" id="indicators">
+        <div class="d-flex">
+            <h1 class="p-2">Level:</h1>
+            <h1 class="p-2" id="level_indicator" class="animated"></h1>
+        </div>
+        <div class="d-flex">
+            <h1 class="p-2">Time:</h1>
+            <h1 id="time_left" class="p-2"></h1>
+        </div>
+        <div class="d-flex">
+            <div id="heart" class="fui-heart" style="font-size: 4rem; padding-top: 1rem; color: #e74c3c;"></div>
+            <h1 class="p-2" id="lives_left"></h1>
         </div>
     </div>
 </body>
@@ -60,7 +59,7 @@
     const level_elem = $("#level_indicator");
     const lives_elem = $("#lives_left");
     const canvas_id = "#game";
-    const USE_WS_CONTROLLER = false;
+    const USE_WS_CONTROLLER = true;
 
     const game = new Game(canvas_id);
 
