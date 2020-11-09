@@ -46,6 +46,7 @@
 <script src="scripts/3rdparty/jcanvas.min.js"></script>
 <script src="scripts/game/enums.js"></script>
 <script src="scripts/game/bird.js"></script>
+<script src="scripts/game/night_sky.js"></script>
 <script src="scripts/game/ground.js"></script>
 <script src="scripts/game/pipes.js"></script>
 <script src="scripts/game/renderer.js"></script>
@@ -59,7 +60,7 @@
     const level_elem = $("#level_indicator");
     const lives_elem = $("#lives_left");
     const canvas_id = "#game";
-    const USE_WS_CONTROLLER = true;
+    const USE_WS_CONTROLLER = false;
 
     const game = new Game(canvas_id);
 

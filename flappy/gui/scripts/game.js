@@ -82,8 +82,13 @@ class Game extends EventTarget {
 
     initCanvas() {
         this.renderer.init();
-        this.renderer.addSprite(this.bird);
 
+        for (let i = 0; i < this.background.blocks.length; ++i) {
+            this.renderer.addSprite(this.background.blocks[i]);
+        }
+
+        this.renderer.addSprite(this.bird);
+        
         for (let i = 0; i < this.ground.blocks.length; ++i) {
             this.renderer.addSprite(this.ground.blocks[i]);
         }
@@ -129,6 +134,11 @@ class Game extends EventTarget {
 
         this.pipes.reposition(dt);
 
+        const new_background_tile = this.background.reposition(dt);
+        if (new_background_tile) {
+            this.renderer.addSprite(new_background_tile);
+        }
+        
         const added_block = this.ground.reposition(dt);
         if (added_block) {
             this.renderer.addSprite(added_block);
@@ -138,6 +148,7 @@ class Game extends EventTarget {
     updateRenderer() {
         this.renderer.updateSprite(this.bird);
         this.renderer.updateGroupLayer(this.pipes.LAYER_GROUP, this.pipes.dx);
+        this.renderer.updateGroupLayer(this.background.LAYER_GROUP, this.background.dx);
         this.renderer.updateGroupLayer(this.ground.LAYER_GROUP, this.ground.dx);
         this.renderer.renderScore(this.hyperparams.score);
     }
@@ -206,6 +217,7 @@ class Game extends EventTarget {
 
     prepareForTheNextLevel() {
         this.renderer = new Renderer(this.c);
+        this.background = new NightSky(this.c, this.hyperparams.velocity);
         this.bird = new Bird(this.hyperparams.GRAVITY);
         this.ground = new Ground(this.c, this.hyperparams.velocity);
         this.pipes = new Pipes(this.hyperparams.velocity);

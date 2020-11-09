@@ -8,25 +8,25 @@ class Renderer {
     }
 
     init() {
-        const skyGradient = this.c.createGradient({
-            x1: 0,
-            y1: 0,
-            x2: 0,
-            y2: this.c.height(),
-            c1: "#2980b9",
-            c2: "#82bfe8"
-        });
+        // const skyGradient = this.c.createGradient({
+        //     x1: 0,
+        //     y1: 0,
+        //     x2: 0,
+        //     y2: this.c.height(),
+        //     c1: "#2980b9",
+        //     c2: "#82bfe8"
+        // });
 
-        // sky
-        this.c.addLayer({
-            type: "rectangle",
-            fillStyle: skyGradient,
-            index: 0,
-            x: this.c.width() / 2,
-            y: this.c.height() / 2,
-            width: this.c.width(),
-            height: this.c.height()
-        });
+        // // sky
+        // this.c.addLayer({
+        //     type: "rectangle",
+        //     fillStyle: skyGradient,
+        //     index: 0,
+        //     x: this.c.width() / 2,
+        //     y: this.c.height() / 2,
+        //     width: this.c.width(),
+        //     height: this.c.height()
+        // });
     }
 
     addSprite(obj) {
@@ -36,7 +36,7 @@ class Renderer {
                 source: obj.img.src,
                 scale: obj.scale || 1.0,
                 groups: [obj.LAYER_GROUP],
-                index: 2,
+                index: obj.LAYER_INDEX || 2,
                 x: obj.x,
                 y: obj.y
             });
@@ -46,7 +46,7 @@ class Renderer {
                 source: obj.img.src,
                 scale: obj.scale || 1.0,
                 name: obj.LAYER_NAME,
-                index: 1,
+                index: 2,
                 x: obj.x,
                 y: obj.y
             });
