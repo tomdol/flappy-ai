@@ -1,6 +1,20 @@
+class Nose {
+    angle = 0.0;
+
+    constants = Object.freeze({
+        min_angle: -30,
+        max_angle: 70
+    });
+
+    recalc_angle(bird_velocity) {
+
+    }
+}
+
 class Bird {
     x = 100;
     y = 100;
+    ceiling_bump_back = 0;
 
     scale = 0.333;
     LAYER_NAME = "player";
@@ -16,9 +30,11 @@ class Bird {
     reposition(dt, flap_energy) {
         if (this.top() < 0) {
             this.y = this.scale * this.img.h / 2;
-            this.velocity = 100;
+            this.velocity = 0;
+            this.ceiling_bump_back = 10000;
         } else {
-            const dv = (this.gravity - flap_energy) * dt;
+            const dv = (this.gravity - flap_energy + this.ceiling_bump_back) * dt;
+            this.ceiling_bump_back = 0;
             this.velocity += dv;
             const dy = this.velocity * dt;
             this.y += dy;
