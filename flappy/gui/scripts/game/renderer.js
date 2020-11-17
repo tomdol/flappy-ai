@@ -57,7 +57,7 @@ class Renderer {
         this.c.setLayer(obj.LAYER_NAME, {
             x: obj.x,
             y: obj.y,
-            rotate: obj.nose ? obj.nose : 0
+            rotate: obj.nose ? obj.nose.angle : 0
         });
     }
 

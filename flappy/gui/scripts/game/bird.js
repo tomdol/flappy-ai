@@ -1,13 +1,23 @@
 class Nose {
     angle = 0.0;
 
-    constants = Object.freeze({
-        min_angle: -30,
-        max_angle: 70
-    });
-
     recalc_angle(bird_velocity) {
+        const max_diving_velocity = 700;
+        const min_climbing_velocity = -300;
+        const max_angle = 70;
+        const min_angle = -30;
 
+        const vel_range = max_diving_velocity - min_climbing_velocity;
+        const angle_range = max_angle - min_angle;
+
+        if (bird_velocity > max_diving_velocity) {
+            this.angle = max_angle;
+        } else if (bird_velocity < min_climbing_velocity) {
+            this.angle = min_angle;
+        } else {
+            const factor = bird_velocity / vel_range;
+            this.angle = angle_range * factor + min_angle;
+        }
     }
 }
 
@@ -19,7 +29,7 @@ class Bird {
     scale = 0.333;
     LAYER_NAME = "player";
     img = { src: "img/bird_transparent.png", h: 110, w: 164 };
-    nose = NoseDirection.FLIGHT;
+    nose = new Nose();
 
     velocity = 0.0;
 
@@ -40,21 +50,7 @@ class Bird {
             this.y += dy;
         }
 
-        if (this.velocity > 600) {
-            this.nose = NoseDirection.DIVING;
-        } else if (this.velocity > 400) {
-            this.nose = NoseDirection.ALMOST_DIVING;
-        } else if (this.velocity > 300) {
-            this.nose = NoseDirection.FALLING_FASTER;
-        } else if (this.velocity > 250) {
-            this.nose = NoseDirection.FALLING;
-        } else if (this.velocity < -300.0) {
-            this.nose = NoseDirection.CLIMBING;
-        } else if (this.velocity < -150.0) {
-            this.nose = NoseDirection.CLIMBING_LIGHT;
-        } else {
-            this.nose = NoseDirection.STRAIGHT_FLIGHT;
-        }
+        this.nose.recalc_angle(this.velocity);
     }
 
     top() {
@@ -66,10 +62,10 @@ class Bird {
     }
 
     left() {
-        return this.x - this.scale * this.img.w / 2 - this.scale * 20; //extra offset for the wings
+        return this.x - this.scale * this.img.w / 2 - this.scale * 30; //extra offset for the wings
     }
 
     right() {
-        return this.x + this.scale * this.img.w / 2 - this.scale * 20; //extra offset for the nose
+        return this.x + this.scale * this.img.w / 2 - this.scale * 30; //extra offset for the nose
     }
 }
