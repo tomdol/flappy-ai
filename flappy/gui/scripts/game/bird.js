@@ -16,7 +16,7 @@ class Nose {
             this.angle = min_angle;
         } else {
             const factor = bird_velocity / vel_range;
-            this.angle = angle_range * factor + min_angle;
+            this.angle = angle_range * factor;
         }
     }
 }
