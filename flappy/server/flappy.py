@@ -1,12 +1,18 @@
-from openvino import runtime
 import cv2
-from video_player import VideoPlayer
+from video_player import *
+from classifier import *
 
-# core = runtime.Core()
-# model = core.read_model("/home/tomek/models/mobilenetv2-12.onnx")
-# cm = core.compile_model(model, "CPU")
+def crop_and_resize(frame, spatial_size):
+    frame = frame[:, 80:560]
+    return cv2.resize(
+        src=frame,
+        dsize=(spatial_size, spatial_size),
+        interpolation=cv2.INTER_AREA,
+    )
+
 try:
-    player = VideoPlayer(source=0, flip=True, fps=30)
+    classifier = Classifier()
+    player = VideoPlayer(source=0, flip=True, fps=25)
     player.start()
     win_title = "Flappy Controller"
     cv2.namedWindow(
@@ -17,17 +23,10 @@ try:
         frame = player.next()
         if frame is None:
             break
-        # if frame larger than full HD, reduce size to improve the performance
-        scale = 1280 / max(frame.shape)
-        if scale < 1:
-            frame = cv2.resize(
-                src=frame,
-                dsize=None,
-                fx=scale,
-                fy=scale,
-                interpolation=cv2.INTER_AREA,
-            )
+        frame = crop_and_resize(frame, classifier.spatial_size)
+
         cv2.imshow(win_title, frame)
+        classifier.classify(frame)
         key = cv2.waitKey(1)
         if key == 27:
             break
