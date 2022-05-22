@@ -26,16 +26,14 @@ try:
         frame = crop_and_resize(frame, classifier.spatial_size)
 
         cv2.imshow(win_title, frame)
-        classifier.classify(frame)
+        detected_pose = classifier.classify(frame)
+        print(detected_pose)
         key = cv2.waitKey(1)
         if key == 27:
             break
-except KeyboardInterrupt:
-    print("ctrl-c")
 except RuntimeError as e:
     print(e)
 finally:
     if player is not None:
         player.stop()
-    # if use_popup:
-    #     cv2.destroyAllWindows()
+        cv2.destroyAllWindows()
