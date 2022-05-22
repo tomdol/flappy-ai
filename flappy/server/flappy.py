@@ -10,6 +10,14 @@ def crop_and_resize(frame, spatial_size):
         interpolation=cv2.INTER_AREA,
     )
 
+def handle_prediction(prediction):
+    if prediction == FrameClass.ARMS_UP:
+        print("Arms up detected")
+    elif prediction == FrameClass.ARMS_DOWN:
+        print("Arms down detected")
+    else:
+        pass
+
 try:
     classifier = Classifier()
     player = VideoPlayer(source=0, flip=True, fps=25)
@@ -27,7 +35,9 @@ try:
 
         cv2.imshow(win_title, frame)
         detected_pose = classifier.classify(frame)
-        print(detected_pose)
+        
+        handle_prediction(detected_pose)
+
         key = cv2.waitKey(1)
         if key == 27:
             break

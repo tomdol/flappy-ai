@@ -1,5 +1,20 @@
 from openvino import runtime
 import numpy as np
+from enum import Enum
+
+class FrameClass(Enum):
+    ARMS_UP = 0
+    ARMS_DOWN = 1
+    NON_FUNCTIONAL = 2
+
+    @classmethod
+    def from_int(cls, value):
+        if value == 0:
+            return cls.ARMS_UP
+        elif value == 1:
+            return cls.ARMS_DOWN
+        else:
+            return cls.NON_FUNCTIONAL
 
 class Classifier:
     def __init__(self):
@@ -13,9 +28,9 @@ class Classifier:
     def input_from_frame(self, frame):
         return np.expand_dims(np.transpose(frame, (2, 0, 1)), 0)
 
-    def classify(self, frame):
+    def classify(self, frame) -> FrameClass:
         input_data = self.input_from_frame(frame)
         res = self.model([input_data])[self.output_name]
         res = np.squeeze(res)
-        return np.argsort(res)[-1]
+        return FrameClass.from_int(np.argsort(res)[-1])
 
