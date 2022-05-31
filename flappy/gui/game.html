@@ -23,8 +23,9 @@
     </style>
 </head>
 
-<body class="palette-turquoise">
-    <canvas id="game" width="1400" height="600"></canvas>
+<body class="palette-turquoise" onload="init_the_game()">
+    <div>&nbsp;</div>
+    <canvas id="game"></canvas>
     <div class="d-flex justify-content-around animated" id="indicators">
         <div class="d-flex">
             <h1 class="p-2">Level:</h1>
@@ -56,77 +57,98 @@
 <script src="scripts/flappy_index.js"></script>
 
 <script>
-    const time_left_elem = $("#time_left");
-    const level_elem = $("#level_indicator");
-    const lives_elem = $("#lives_left");
-    const canvas_id = "#game";
-    const USE_WS_CONTROLLER = false;
+    function canvas_dimensions() {
+        const win_w = window.innerWidth;
+        const win_h = window.innerHeight;
 
-    const game = new Game(canvas_id);
-
-    if (USE_WS_CONTROLLER) {
-        create_controller(game);
+        return {
+            w: win_w - 50,
+            h: win_h - 180
+        };
     }
 
-    game.addEventListener('tick', (evt) => {
-        time_left_elem.text(evt.detail);
-        if (evt.detail == 0) {
-            animateOnce("#level_indicator", "bounceOut");
+    function resize_canvas() {
+        const canvas_ctx = $("#game")[0].getContext('2d');
+        const canvas_dims = canvas_dimensions();
+        canvas_ctx.canvas.width = canvas_dims.w;
+        canvas_ctx.canvas.height = canvas_dims.h;
+    }
 
-            animateOnce("#time_left", "bounceOut", () => {
-                game.emitLevelValues();
-            });
+    function init_the_game() {
+        resize_canvas();
+
+        const time_left_elem = $("#time_left");
+        const level_elem = $("#level_indicator");
+        const lives_elem = $("#lives_left");
+        const canvas_id = "#game";
+        const USE_WS_CONTROLLER = false;
+
+        const game = new Game(canvas_id);
+
+        if (USE_WS_CONTROLLER) {
+            create_controller(game);
         }
-    });
 
-    game.addEventListener('level_up', (evt) => {
-        level_elem.text(evt.detail);
-    });
-    game.addEventListener('lives_left', (evt) => {
-        lives_elem.text(evt.detail);
-    });
-    game.addEventListener('bird_died', () => {
-        animateOnce("#heart", "heartBeat");
-        game.emitLevelValues();
-    });
-    game.addEventListener('end_of_game', () => {
-        animateOnce("#indicators", "fadeOutDown", () => {
-            $("#indicators").remove();
-            showScoreBoard();
-        });
-    });
+        game.addEventListener('tick', (evt) => {
+            time_left_elem.text(evt.detail);
+            if (evt.detail == 0) {
+                animateOnce("#level_indicator", "bounceOut");
 
-    game.emitLevelValues();
-
-    document.onkeydown = (e) => {
-        if (e.which == 32) {
-            if (game.readyToStart()) {
-                game.start();
-            } else {
-                game.flap();
+                animateOnce("#time_left", "bounceOut", () => {
+                    game.emitLevelValues();
+                });
             }
+        });
+
+        game.addEventListener('level_up', (evt) => {
+            level_elem.text(evt.detail);
+        });
+        game.addEventListener('lives_left', (evt) => {
+            lives_elem.text(evt.detail);
+        });
+        game.addEventListener('bird_died', () => {
+            animateOnce("#heart", "heartBeat");
+            game.emitLevelValues();
+        });
+        game.addEventListener('end_of_game', () => {
+            animateOnce("#indicators", "fadeOutDown", () => {
+                $("#indicators").remove();
+                showScoreBoard();
+            });
+        });
+
+        game.emitLevelValues();
+
+        document.onkeydown = (e) => {
+            if (e.which == 32) {
+                if (game.readyToStart()) {
+                    game.start();
+                } else {
+                    game.flap();
+                }
+            }
+        };
+
+        function create_controller(game) {
+            const controller = new Controller("ws://127.0.0.1:9000");
+
+            controller.addEventListener('connected', () => {
+                game.setWsController(controller);
+            });
+
+            controller.addEventListener('websocket_error', (evt) => {
+                console.error('Websocket error');
+                console.error(evt);
+            });
+
+            controller.addEventListener('disconnected', () => {
+                console.log('Websocket disconnected');
+
+                controller.connect(); // TODO
+            });
+
+            controller.connect();
         }
-    };
-
-    function create_controller(game) {
-        const controller = new Controller("ws://127.0.0.1:9000");
-
-        controller.addEventListener('connected', () => {
-            game.setWsController(controller);
-        });
-
-        controller.addEventListener('websocket_error', (evt) => {
-            console.error('Websocket error');
-            console.error(evt);
-        });
-
-        controller.addEventListener('disconnected', () => {
-            console.log('Websocket disconnected');
-
-            controller.connect(); // TODO
-        });
-
-        controller.connect();
     }
 </script>
 

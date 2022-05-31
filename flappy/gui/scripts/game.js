@@ -111,7 +111,7 @@ class Game extends EventTarget {
     }
 
     updateFlapEnergy() {
-        if (this.controls.add_energy) {
+        if (this.controls.add_energy) { //TODO: ... and game in progress? to avoid bouncing off the ceiling
             this.controls.flap_energy += this.hyperparams.FLAP_ENERGY;
 
             if (this.bird.velocity > 0) {
@@ -211,8 +211,8 @@ class Game extends EventTarget {
             animation_loop: null
         };
 
-        this.hyperparams.game_time = 0.0,
-            this.hyperparams.time_left = this.constants.level_time / 1000;
+        this.hyperparams.game_time = 0.0;
+        this.hyperparams.time_left = this.constants.level_time / 1000;
     }
 
     prepareForTheNextLevel() {
