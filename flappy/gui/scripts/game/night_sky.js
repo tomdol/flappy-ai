@@ -3,7 +3,7 @@ class NightSky {
     LAYER_INDEX = 0;
 
     blocks = [];
-    img = { src: "img/night_sky.png", w: 1400, h: 600 };
+    img = { src: "img/night_sky.png", w: 1400, h: 1200 };
     parallax_distance = 10;
     dx = 0;
 
