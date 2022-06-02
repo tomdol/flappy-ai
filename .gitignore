@@ -36,3 +36,4 @@ server/src/login-game/dist
 server/src/login-game/.cache/
 **/__pycache__
 .vscode/
+flappy/model/dataset
