@@ -1,5 +1,6 @@
 from pygame import camera, image, event, time
 from pygame.locals import KEYDOWN
+from tqdm import tqdm
 import pygame
 import datetime
 import sys
@@ -16,11 +17,21 @@ def init_cam(id):
     return cam
 
 def take_a_photo(cam):
-    print("Taking a photo", random.randint(0, 1000))
     filename = datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S') + ".png"
     image.save(cam.get_image(), target_dir + "/" + filename)
 
+def countdown(delay):
+    pbar_interval = 100
+    steps = int(delay / pbar_interval)
+    
+    with tqdm(total=steps, leave=False, bar_format="{bar}", nrows=4) as pbar:
+        for i in range(steps):
+            pbar.update(1)
+            time.delay(pbar_interval)
+
+########################################################################################
+
 cam = init_cam(int(sys.argv[1]))
 while True:
-    time.delay(photos_delay)
     take_a_photo(cam)
+    countdown(photos_delay)
